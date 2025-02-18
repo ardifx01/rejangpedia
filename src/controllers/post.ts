@@ -55,33 +55,43 @@ export default class rejangpedia {
 
         return { data: mahiru };
     }
-
-    async search(searchTerm: string) {
+    async search(searchTerm: string, page: number = 1, limit: number = 5) {
         let combinedResults = []; // Inisialisasi atau reset nilai ke array kosong setiap kali metode dipanggil
-        // 1. Mencari di data lokal
-        const localDataResults = await this.data.find((item: Data) => item.Title.toLowerCase().includes(searchTerm.toLowerCase()));
-
-        // 2. Mencari di Wikipedia
-        const wikipediaResults = await this.searchWikipedia(searchTerm);
-
-        // 3. Menggabungkan hasil dari kedua sumber tanpa duplikasi
+    
+        // 1. Mencari di data lokal (menggunakan skip dan limit untuk pagination)
+        const skip = (page - 1) * limit;
+        const localDataResults = await this.data
+            .find({ Title: { $regex: searchTerm, $options: 'i' } })
+            .skip(skip) // Skip untuk pagination
+            .limit(limit) // Batas hasil berdasarkan limit
+            .slice('Content', 1) // Mengambil hanya bab pertama dari array Content
+            .exec();
+    
         combinedResults = [...localDataResults];
-        if (wikipediaResults) {
-            wikipediaResults.forEach((wikipediaItem: Data) => {
-                const isDuplicate = localDataResults.some((localItem) => localItem.id === wikipediaItem.id);
-
-                //@ts-ignore
-                if (!isDuplicate) combinedResults.push(wikipediaItem);
-            });
+        if(page === 1) {
+            // 2. Mencari di Wikipedia
+            const wikipediaResults = await this.searchWikipedia(searchTerm);
+        
+            // 3. Menggabungkan hasil dari kedua sumber tanpa duplikasi
+            if (wikipediaResults) {
+                wikipediaResults.forEach((wikipediaItem: Data) => {
+                    const isDuplicate = localDataResults.some((localItem) => localItem.id === wikipediaItem.id);
+        
+                    //@ts-ignore
+                    if (!isDuplicate) combinedResults.push(wikipediaItem);
+                });
+            }
         }
-
+    
         return combinedResults;
     }
+    
 
     async searchWikipedia(searchTerm: string) {
         // Mengecek apakah data sudah ada berdasarkan judul
         let existingData: any = [];
-        existingData = await this.data.find((item: Data) => item.Title === searchTerm);
+        // Perbaiki dengan query yang sesuai:
+        existingData = await this.data.find({ Title: searchTerm }).exec();
         if (existingData) {
             return; // Mengembalikan data yang sudah ada dalam bentuk array jika ditemukan
         }
