@@ -44,12 +44,16 @@ export default class rejangpedia {
         return recommendation;
     }
 
-    async getDetails(id: string, onGoing: boolean) {
-        let mahiru: Data[];
+    async getDetails(id: string | string[], onGoing: boolean) {
+        let mahiru;
 
-        if (onGoing) mahiru = await this.ongoingData.find((obj: Data) => obj.id === id);
-        else mahiru = await this.data.find((obj: Data) => obj.id === id);
-
+        if (onGoing) {
+            mahiru = await this.ongoingData.findOne({ id: id }).exec();
+        }
+        else {
+            mahiru = await this.data.findOne({ id: id }).exec();
+        }
+        
         //cek dulu data nya null or tidak
         if (!mahiru) return { data: "Data Not Found" };
 
