@@ -1,6 +1,6 @@
 import { Model, Schema, model, models } from "mongoose";
 
-const userSchema: Schema<Users> = new Schema<Users>({
+const userSchema: Schema<userType> = new Schema<userType>({
     id: String,
     username: String,
     password: String,
@@ -8,5 +8,5 @@ const userSchema: Schema<Users> = new Schema<Users>({
     atmin: Boolean,
 });
 
-const userModel: Model<Users> = models.user || model("user", userSchema);
+const userModel: Model<userType> = models.user || model("user", userSchema);
 export { userModel, userSchema };

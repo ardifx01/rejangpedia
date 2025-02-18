@@ -59,6 +59,7 @@ export default class rejangpedia {
 
         return { data: mahiru };
     }
+    
     async search(searchTerm: string, page: number = 1, limit: number = 5) {
         let combinedResults = []; // Inisialisasi atau reset nilai ke array kosong setiap kali metode dipanggil
     

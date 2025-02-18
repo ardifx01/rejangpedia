@@ -13,10 +13,14 @@ type Data = {
     }[];
 }
 
-type Users = {
-    id: string;
+type userType = {
+    id?: string;
     username: string;
-    password: string;
-    desc: string;
-    atmin: boolean;
+    password?: string;
+    desc?: string;
+    atmin?: boolean;
+    accessToken?: {
+        accessNow: string;
+        timeBefore: string;
+    };
 };
