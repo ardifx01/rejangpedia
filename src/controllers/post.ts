@@ -89,7 +89,6 @@ export default class rejangpedia {
     
         return combinedResults;
     }
-    
 
     async searchWikipedia(searchTerm: string) {
         // Mengecek apakah data sudah ada berdasarkan judul
