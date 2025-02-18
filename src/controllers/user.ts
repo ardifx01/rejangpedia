@@ -154,7 +154,7 @@ class Users {
             return this.#error[0];
         }
     }
-    async getUserByUsername(username: string) {
+    async getUserByUsername(username: string | string[]) {
         try {
             // Cari user berdasarkan username
             const user = await this.#users.findOne({ username: username });
