@@ -18,7 +18,7 @@ const mainSchema = new Schema<Data>({
     ],
 });
 
-const mainModel: Model<Data> = models.main|| model<Data>("mains", mainSchema);
-const goingModel: Model<Data> = models.main || model<Data>("ongoings", mainSchema);
+const mainModel: Model<Data> = models.mains || model<Data>("mains", mainSchema);
+const goingModel: Model<Data> = models.goings || model<Data>("ongoings", mainSchema);
 
 export { mainModel, goingModel };

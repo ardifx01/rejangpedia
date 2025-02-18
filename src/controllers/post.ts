@@ -1,6 +1,8 @@
 import { goingModel, mainModel } from "@/models/post";
 import { Model } from "mongoose";
 import axios from "axios";
+import dbConnect from "@/utils/mongoose";
+await dbConnect();
 
 export default class rejangpedia {
     static instance: rejangpedia;
@@ -20,11 +22,26 @@ export default class rejangpedia {
     }
 
     async getRecomendation() {
-        const recomendation = await this.data.find().limit(5).exec();
-
-        const filteredRecommendation = recomendation.filter((item) => item.Title.toLowerCase().includes("rejang") || item.Title.toLowerCase().includes("bengkulu"));
-
-        return filteredRecommendation;
+        const recommendation = await this.data.aggregate([
+            {
+                $match: {
+                    $or: [
+                        { Title: { $regex: 'rejang', $options: 'i' } },
+                        { Title: { $regex: 'bengkulu', $options: 'i' } }
+                    ]
+                }
+            },
+            {
+                $project: {
+                    Content: 0 // Mengecualikan Content
+                }
+            },
+            {
+                $sample: { size: 5 } // Mengambil 5 dokumen secara acak
+            }
+        ]);
+        
+        return recommendation;
     }
 
     async getDetails(id: string, onGoing: boolean) {
