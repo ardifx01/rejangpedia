@@ -40,7 +40,7 @@ export default class rejangpedia {
                 $sample: { size: 5 } // Mengambil 5 dokumen secara acak
             }
         ]);
-        
+
         return recommendation;
     }
 
@@ -53,16 +53,16 @@ export default class rejangpedia {
         else {
             mahiru = await this.data.findOne({ id: id }).exec();
         }
-        
+
         //cek dulu data nya null or tidak
         if (!mahiru) return { data: "Data Not Found" };
 
         return { data: mahiru };
     }
-    
+
     async search(searchTerm: string, page: number = 1, limit: number = 5) {
         let combinedResults = []; // Inisialisasi atau reset nilai ke array kosong setiap kali metode dipanggil
-    
+
         // 1. Mencari di data lokal (menggunakan skip dan limit untuk pagination)
         const skip = (page - 1) * limit;
         const localDataResults = await this.data
@@ -71,23 +71,23 @@ export default class rejangpedia {
             .limit(limit) // Batas hasil berdasarkan limit
             .slice('Content', 1) // Mengambil hanya bab pertama dari array Content
             .exec();
-    
+
         combinedResults = [...localDataResults];
-        if(page === 1) {
+        if (page === 1) {
             // 2. Mencari di Wikipedia
             const wikipediaResults = await this.searchWikipedia(searchTerm);
-        
+
             // 3. Menggabungkan hasil dari kedua sumber tanpa duplikasi
             if (wikipediaResults) {
                 wikipediaResults.forEach((wikipediaItem: Data) => {
                     const isDuplicate = localDataResults.some((localItem) => localItem.id === wikipediaItem.id);
-        
+
                     //@ts-ignore
                     if (!isDuplicate) combinedResults.push(wikipediaItem);
                 });
             }
         }
-    
+
         return combinedResults;
     }
 
@@ -142,9 +142,56 @@ export default class rejangpedia {
         }
     }
 
-    userAction() {
-        return {
-            //TODO bikin function delete, newArticle, editArticle!!!!!
+    delete(id: string, ongoing: boolean) {
+        if (ongoing) {
+            this.ongoingData.deleteOne({ id: id })
+        } else {
+            this.data.deleteOne({ id: id })
         }
     }
+
+    async edit(id: string, pembuat:string, data: any) {
+        // Find the document in the "mainModel" collection based on the id
+        const acceptedData = await this.data.findOne({ id: id });
+    
+        if (!acceptedData) {
+            return { data: "Data Not Found" }; // Handle case where the data doesn't exist
+        }
+    
+        const tanggalSekarang = new Date();
+        const namaBulan = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli",
+            "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+        const tanggal = tanggalSekarang.getDate();
+        const bulan = namaBulan[tanggalSekarang.getMonth()];
+        const tahun = tanggalSekarang.getFullYear();
+        const formatWaktu = `${tanggal}-${bulan}-${tahun}`;
+
+        // Prepare the updated data
+        const updatedData = {
+            id: id,
+            Title: data.title,
+            Pembuat: pembuat,
+            Image: `https://ik.imagekit.io/9hpbqscxd/RejangPedia/image-${id}.jpg`,
+            Diedit: data.pembuat,
+            Link: data.link.replace("/watch?v=", "/embed/"),
+            Waktu: acceptedData.Waktu || "Tidak Diketahui", // Use existing Waktu if available
+            Edit: formatWaktu,
+            Content: JSON.parse(data.content) // Ensure the content is correctly formatted
+        };
+    
+        // Using `updateOne` to either update the document or insert it
+        await this.ongoingData.updateOne(
+            { id: id }, // Find by ID
+            { $set: updatedData }, // Update fields
+            { upsert: true } // Create a new document if it doesn't exist
+        );
+    
+        // Return a success message
+        return { data: "Data successfully updated" };
+    }
+    
+    
+
 }
