@@ -227,4 +227,36 @@ export default class rejangpedia {
             Content: body.Content,
         });
     }
+    async accept(id: string) {
+        const acceptedData = await this.ongoingData.findOne({ id: id });
+        if (!acceptedData) {
+            return;
+        }
+        try {
+            // Hapus data dari goingModel
+            await this.ongoingData.deleteOne({ id: id });
+            // Cek apakah data sudah ada di mainModel
+            const existingData = await this.data.findOne({ id: id });
+
+            if (existingData) {
+                // Update data yang sudah ada
+                await this.data.findOneAndUpdate({ id: id }, acceptedData);
+            } else {
+                // Tambahkan data baru
+                await this.data.create({
+                    id: acceptedData.id,
+                    Title: acceptedData.Title,
+                    Pembuat: acceptedData.Pembuat,
+                    Image: acceptedData.Image,
+                    Diedit: "",
+                    Link: acceptedData.Link,
+                    Edit: acceptedData.Edit,
+                    Waktu: acceptedData.Waktu,
+                    Content: acceptedData.Content,
+                });
+            }
+        } catch (error) {
+            console.error("Error accepting data:", error);
+        }
+    }
 }
