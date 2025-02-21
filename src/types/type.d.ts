@@ -1,4 +1,5 @@
 type Data = {
+    _id?: any
     id?: string;
     Title: string;
     Image?: string;
