@@ -152,12 +152,12 @@ export default class rejangpedia {
         }
     }
 
-    async edit(id: string, pembuat: string, data: any) {
+    async edit(data: any) {
         // Find the document in the "mainModel" collection based on the id
-        const acceptedData = await this.data.findOne({ id: id });
+        const acceptedData = await this.data.findOne({ id: data.id });
 
         if (!acceptedData) {
-            return { data: "Data Not Found" }; // Handle case where the data doesn't exist
+            return; // Handle case where the data doesn't exist
         }
 
         const tanggalSekarang = new Date();
@@ -172,11 +172,11 @@ export default class rejangpedia {
 
         // Prepare the updated data
         const updatedData = {
-            id: id,
-            Title: data.title,
-            Pembuat: pembuat,
-            Image: `${process.env.urlEndpoint}RejangPedia/image-${id}.jpg`,
-            Diedit: data.pembuat,
+            id: data.id,
+            Title: data.Title,
+            Pembuat: acceptedData.Pembuat,
+            Image: `${process.env.urlEndpoint}RejangPedia/image-${data.id}.jpg`,
+            Diedit: data.Diedit,
             Link: data.link.replace("/watch?v=", "/embed/"),
             Waktu: acceptedData.Waktu || "Tidak Diketahui", // Use existing Waktu if available
             Edit: formatWaktu,
@@ -185,13 +185,13 @@ export default class rejangpedia {
 
         // Using `updateOne` to either update the document or insert it
         await this.ongoingData.updateOne(
-            { id: id }, // Find by ID
+            { id: data.id }, // Find by ID
             { $set: updatedData }, // Update fields
             { upsert: true } // Create a new document if it doesn't exist
         );
 
         // Return a success message
-        return { data: "Data successfully updated" };
+        return updatedData ;
     }
     async create(body: Data) {
         const uniqueFileName = uuidv4();
