@@ -212,7 +212,7 @@ class Users {
         }
     }
 
-    async editProfile(userData: userType ): Promise<userType | {}> {
+    async editProfile(userData: userType): Promise<userType | {}> {
         try {
             const user = await this.#users.findOne({ id: userData.id });
             const hasInvalidCharacters = /[\u200B-\u200D\uFEFF]/.test(userData.username);
@@ -270,6 +270,33 @@ class Users {
             return null;
         }
     }
+    async recrutAdmin(id: string | string[]) {
+        const foundUser = await this.#users.findOne({ id: id });
+        if (foundUser) {
+            // If the user is found, set the 'atmin' property to true
+            if (!foundUser.atmin) {
+                await this.#users.updateOne(
+                    { _id: foundUser._id },
+                    { $set: { atmin: true } }
+                );
+            } else {
+                await this.#users.updateOne(
+                    { _id: foundUser._id },
+                    { $set: { atmin: false } }
+                );
+            }
+        }
+    }
+    async checkAdmin(id: string): Promise<boolean> {
+        try {
+            const user = await this.#users.findOne({ id: id });
+            return user?.atmin === true;
+        } catch (error) {
+            console.error("Error checking admin status:", error);
+            return false;
+        }
+    }
+
 }
 
 export default Users; //TODO Export biar bisa dipake

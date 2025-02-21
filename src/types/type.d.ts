@@ -14,6 +14,7 @@ type Data = {
 }
 
 type userType = {
+    _id?: any;
     id?: string;
     username: string;
     password?: string;
