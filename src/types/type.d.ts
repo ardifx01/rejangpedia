@@ -1,16 +1,16 @@
 type Data = {
-    id: string;
+    id?: string;
     Title: string;
-    Image: string;
+    Image?: string;
     Pembuat: string;
-    Diedit: string;
+    Diedit?: string;
     Link: string;
-    Waktu: string;
-    Edit: string;
+    Waktu?: string;
+    Edit?: string;
     Content: {
         babTitle: string;
         babContent: string;
-    }[];
+    }[] | string;
 }
 
 type userType = {

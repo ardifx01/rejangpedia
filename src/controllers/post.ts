@@ -134,7 +134,7 @@ export default class rejangpedia {
                 },
             ],
         };
-        if (newData && newData.Content[0].babContent) {
+        if (newData) {
             const isDataExists = await this.data.findOne({ id: newData.id });
 
             if (!isDataExists) {
@@ -144,7 +144,7 @@ export default class rejangpedia {
         }
     }
 
-    delete(id: string | [], ongoing: boolean) {
+    delete(id: string | string[], ongoing: boolean) {
         if (ongoing) {
             this.ongoingData.deleteOne({ id: id })
         } else {
@@ -193,7 +193,7 @@ export default class rejangpedia {
         // Return a success message
         return { data: "Data successfully updated" };
     }
-    async create(body: Data, image: string = "") {
+    async create(body: Data) {
         const uniqueFileName = uuidv4();
         const tanggalSekarang = new Date();
 
@@ -214,18 +214,30 @@ export default class rejangpedia {
         const tanggal = tanggalSekarang.getDate();
         const bulan = namaBulan[tanggalSekarang.getMonth()];
         const tahun = tanggalSekarang.getFullYear();
+        const currentEpochTime = Date.now();
 
         // Upload the data to MongoDB using the 'goingModel'
         await this.ongoingData.create({
             id: uniqueFileName,
             Title: body.Title,
-            Image: image,
+            Image: `${process.env.urlEndpoint}RejangPedia/image-${uniqueFileName}.jpg?updatedAt=${currentEpochTime}`,
             Pembuat: body.Pembuat,
             Link: body.Link.replace("/watch?v=", "/embed/"),
             Edit: `${tanggal}-${bulan}-${tahun}`,
             Waktu: `${tanggal}-${bulan}-${tahun}`,
             Content: body.Content,
         });
+
+        return {
+            id: uniqueFileName,
+            Title: body.Title,
+            Image: `${process.env.urlEndpoint}RejangPedia/image-${uniqueFileName}.jpg`,
+            Pembuat: body.Pembuat,
+            Link: body.Link.replace("/watch?v=", "/embed/"),
+            Edit: `${tanggal}-${bulan}-${tahun}`,
+            Waktu: `${tanggal}-${bulan}-${tahun}`,
+            Content: body.Content,
+        }
     }
     async accept(id: string | string[]) {
         const acceptedData = await this.ongoingData.findOne({ id: id });
