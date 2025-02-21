@@ -2,6 +2,8 @@ import { goingModel, mainModel } from "@/models/post";
 import { Model } from "mongoose";
 import axios from "axios";
 import dbConnect from "@/utils/mongoose";
+import { v4 as uuidv4 } from 'uuid';
+
 await dbConnect();
 
 export default class rejangpedia {
@@ -17,7 +19,7 @@ export default class rejangpedia {
     }
 
     static getInstance(): rejangpedia {
-        if (!rejangpedia.instance) rejangpedia.instance = new rejangpedia();
+        if (!rejangpedia.instance) rejangpedia.instance = new rejangpedia(); //bikin instance baru
         return rejangpedia.instance;
     }
 
@@ -150,14 +152,14 @@ export default class rejangpedia {
         }
     }
 
-    async edit(id: string, pembuat:string, data: any) {
+    async edit(id: string, pembuat: string, data: any) {
         // Find the document in the "mainModel" collection based on the id
         const acceptedData = await this.data.findOne({ id: id });
-    
+
         if (!acceptedData) {
             return { data: "Data Not Found" }; // Handle case where the data doesn't exist
         }
-    
+
         const tanggalSekarang = new Date();
         const namaBulan = [
             "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli",
@@ -173,25 +175,56 @@ export default class rejangpedia {
             id: id,
             Title: data.title,
             Pembuat: pembuat,
-            Image: `https://ik.imagekit.io/9hpbqscxd/RejangPedia/image-${id}.jpg`,
+            Image: `${process.env.urlEndpoint}RejangPedia/image-${id}.jpg`,
             Diedit: data.pembuat,
             Link: data.link.replace("/watch?v=", "/embed/"),
             Waktu: acceptedData.Waktu || "Tidak Diketahui", // Use existing Waktu if available
             Edit: formatWaktu,
             Content: JSON.parse(data.content) // Ensure the content is correctly formatted
         };
-    
+
         // Using `updateOne` to either update the document or insert it
         await this.ongoingData.updateOne(
             { id: id }, // Find by ID
             { $set: updatedData }, // Update fields
             { upsert: true } // Create a new document if it doesn't exist
         );
-    
+
         // Return a success message
         return { data: "Data successfully updated" };
     }
-    
-    
+    async create(body: Data, image: string = "") {
+        const uniqueFileName = uuidv4();
+        const tanggalSekarang = new Date();
 
+        const namaBulan = [ //Buat nama bulannya biar... keren hehehehee
+            "Januari",
+            "Februari",
+            "Maret",
+            "April",
+            "Mei",
+            "Juni",
+            "Juli",
+            "Agustus",
+            "September",
+            "Oktober",
+            "November",
+            "Desember",
+        ];
+        const tanggal = tanggalSekarang.getDate();
+        const bulan = namaBulan[tanggalSekarang.getMonth()];
+        const tahun = tanggalSekarang.getFullYear();
+
+        // Upload the data to MongoDB using the 'goingModel'
+        await this.ongoingData.create({
+            id: uniqueFileName,
+            Title: body.Title,
+            Image: image,
+            Pembuat: body.Pembuat,
+            Link: body.Link.replace("/watch?v=", "/embed/"),
+            Edit: `${tanggal}-${bulan}-${tahun}`,
+            Waktu: `${tanggal}-${bulan}-${tahun}`,
+            Content: body.Content,
+        });
+    }
 }
