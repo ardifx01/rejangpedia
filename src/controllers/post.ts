@@ -144,7 +144,7 @@ export default class rejangpedia {
         }
     }
 
-    delete(id: string, ongoing: boolean) {
+    delete(id: string | [], ongoing: boolean) {
         if (ongoing) {
             this.ongoingData.deleteOne({ id: id })
         } else {
@@ -227,7 +227,7 @@ export default class rejangpedia {
             Content: body.Content,
         });
     }
-    async accept(id: string) {
+    async accept(id: string | string[]) {
         const acceptedData = await this.ongoingData.findOne({ id: id });
         if (!acceptedData) {
             return;
