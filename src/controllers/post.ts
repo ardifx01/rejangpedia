@@ -39,7 +39,7 @@ export default class rejangpedia {
                 }
             },
             {
-                $sample: { size: 5 } // Mengambil 5 dokumen secara acak
+                $sample: { size: 3 } // Mengambil 5 dokumen secara acak
             }
         ]);
 
