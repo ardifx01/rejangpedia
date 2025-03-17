@@ -205,7 +205,7 @@ export default function Home() {
               <div className="col" key={entry.id}>
                 <a
                   className="card"
-                  href={`/details/${entry.id}`}
+                  href={`/post/${entry.id}`}
                   style={{
                     background: "rgba(0, 0, 0, 0)",
                     border: "none",
