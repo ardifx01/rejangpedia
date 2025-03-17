@@ -71,6 +71,7 @@ export default function Home() {
                 style={{
                   backgroundImage: `url(${data.length > 0 ? data[0].Image || 'https://images.pexels.com/photos/1563356/pexels-photo-1563356.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500' : 'https://images.pexels.com/photos/1563356/pexels-photo-1563356.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'})`,
                   backgroundRepeat: "no-repeat",
+                  borderRadius: 24,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   height: 220
@@ -91,13 +92,13 @@ export default function Home() {
                 />
               </a>
               <a
-                href={`/details/${data[0].Title.substring(0, 10)}`}
+                href={`/post/${data[0].id}`}
                 className="btn btn-primary m-1 border-0"
                 style={{
                   backgroundColor: "#0d7502ff !important",
                   color: "white !important",
                   width: "fit-content",
-                  borderRadius: 12,
+                  borderRadius: 24,
                 }}
               >
                 <i
@@ -117,6 +118,7 @@ export default function Home() {
                   background:
                     'url("https://cdn.glitch.global/2f9a2460-083a-49a5-a55f-2abb8ce71e54/thumbnails%2Fkamus.jpg?1702886881063")',
                   color: "white",
+                  borderRadius: 24,
                   backgroundPosition: "center",
                   height: 220
                 }}
@@ -139,7 +141,7 @@ export default function Home() {
                 className="btn btn-primary m-1 border-0"
                 style={{
                   backgroundColor: "#dac26aff !important",
-                  borderRadius: 12,
+                  borderRadius: 24,
                   width: "fit-content",
                   color: "black !important",
                 }}
@@ -161,6 +163,7 @@ export default function Home() {
                   background:
                     'url("https://img.freepik.com/free-vector/person-addicted-social-media-illustration-concept_52683-32210.jpg")',
                   color: "white",
+                  borderRadius: 24,
                   backgroundPosition: "center",
                   height: 220
                 }}
