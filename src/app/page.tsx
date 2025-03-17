@@ -6,6 +6,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 export default function Home() {
   const [data, setData] = useState<Data[] | []>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("")
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,6 +21,10 @@ export default function Home() {
         setLoading(false);
       });
   }, []);
+
+  function search() {
+    window.location.href = "/search/" + searchTerm
+  }
 
   return (
     <div className="container">
@@ -44,6 +49,15 @@ export default function Home() {
           style={{ borderRadius: "6px 4px 4px 6px" }}
           className="form-control search-input custom-input mr-1"
           id="searchInput"
+          onKeyUp={(e) => {
+            //@ts-ignore
+            setSearchTerm(e.target.value);  
+            if (e.key === "Enter") {
+              search()
+              return;
+            }
+
+          }}
           placeholder="Mau Cari Apa Sanak..."
         />
         <button
@@ -51,6 +65,7 @@ export default function Home() {
           className="btn btn-primary border-0 mx-2 rounded-0"
           style={{ borderRadius: "4px 6px 6px 4px !important" }}
           id="searchButton"
+          onClick={search}
         >
           <FontAwesomeIcon icon={faSearch} />
         </button>
