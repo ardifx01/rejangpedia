@@ -186,3 +186,38 @@ button {
     background: #515151 !important;
   }
 } 
+
+#khususHp {
+  display: none;
+}
+#khususHpBawah {
+  display: none;
+  transition: all 0.3s ease-in-out; /* Animasi smooth */
+}
+@media only screen and (max-width: 600px) {
+  #khususDekstop {
+    display: none;
+  }
+  #khususHp {
+    display: block;
+  }
+  #khususHpBawah {
+    display: block;
+  }
+
+  #khususHp .nav-link i {
+    font-size: 1.3rem;
+  }
+  #khususHp .nav-link .d-block {
+    font-size: 0.8rem;
+    color: rgb(199, 199, 199);
+  }
+
+  #khususHpBawah .nav-link i {
+    font-size: 1.3rem;
+  }
+  #khususHpBawah .nav-link .d-block {
+    font-size: 0.8rem;
+    color: rgb(199, 199, 199);
+  }
+}
