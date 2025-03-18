@@ -91,7 +91,7 @@ export default function Home() {
                   backgroundPosition: "center",
                   height: 220
                 }}
-                href="/data"
+                href="/search/a"
               >
                 <div
                   className="dark-overlay"

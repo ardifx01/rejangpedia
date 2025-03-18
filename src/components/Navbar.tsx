@@ -7,7 +7,19 @@ const Navbar = () => {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const router = useRouter();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  const closeDropdown = () => {
+    setDropdownOpen(false);
+  };
+
+  useEffect(() => {
+    require("bootstrap/dist/js/bootstrap.js")
+  }, [])
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollPos = window.pageYOffset;
@@ -27,7 +39,7 @@ const Navbar = () => {
     <>
       {/* Navbar Dekstop */}
       <nav className="navbar navbar-expand-lg navbar-dark bg-light sticky-top" id="khususDekstop">
-        <Link className="navbar-brand" href="/">
+        <Link className="navbar-brand ps-3" href="/">
           rejangpedia
         </Link>
         <button className="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,20 +58,28 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i className="fa fa-bars"></i> Daftar
-              </a>
-              <div className="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
-                <Link className="dropdown-item" href="/tentang">
-                  <i className="fa fa-question"></i> Tentang
-                </Link>
-                <div className="dropdown-divider"></div>
-                <Link className="dropdown-item" href="https://mfathinhalim.github.io">
-                  <i className="fa fa-question-circle"></i> Tentang Fathin
-                </Link>
-                <button className="dropdown-item" onClick={openApp}>Buka di Aplikasi</button>
-              </div>
-            </li>
+          <button
+            className="nav-link dropdown-toggle btn btn-dark"
+            id="navbarDropdown"
+            onClick={toggleDropdown}
+          >
+            <i className="fa fa-bars"></i> Daftar
+          </button>
+          {dropdownOpen && (
+            <div className="dropdown-menu bg-dark show" aria-labelledby="navbarDropdown">
+              <Link className="dropdown-item" href="/tentang" onClick={closeDropdown}>
+                <i className="fa fa-question"></i> Tentang
+              </Link>
+              <div className="dropdown-divider"></div>
+              <Link className="dropdown-item" href="https://mfathinhalim.github.io" onClick={closeDropdown}>
+                <i className="fa fa-question-circle"></i> Tentang Fathin
+              </Link>
+              <button className="dropdown-item" onClick={() => { openApp(); closeDropdown(); }}>
+                Buka di Aplikasi
+              </button>
+            </div>
+          )}
+        </li>
           </ul>
         </div>
       </nav>
@@ -68,8 +88,8 @@ const Navbar = () => {
       <nav className="navbar navbar-expand-lg navbar-dark bg-light sticky-top d-lg-none" id="khususHp">
         <div className="container">
           <div className="row w-100">
-            <div className="col-9 text-center">
-              <Link className="navbar-brand" href="/">
+            <div>
+              <Link className="navbar-brand px-2" href="/">
                 rejangpedia
               </Link>
             </div>
@@ -87,7 +107,7 @@ const Navbar = () => {
             </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" href="/new">
+            <Link className="nav-link" href="/create  ">
               <i className="fa fa-plus"></i>
               <span className="d-block">Tambah</span>
             </Link>
