@@ -53,7 +53,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" href="/new">
+              <Link className="nav-link" href="/post/create">
                 <i className="fa fa-plus"></i> Tambah Artikel
               </Link>
             </li>
@@ -107,7 +107,7 @@ const Navbar = () => {
             </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" href="/create  ">
+            <Link className="nav-link" href="/post/create">
               <i className="fa fa-plus"></i>
               <span className="d-block">Tambah</span>
             </Link>

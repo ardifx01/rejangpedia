@@ -93,6 +93,22 @@ export default class rejangpedia {
         return combinedResults;
     }
 
+    async ongoing(page: number = 1, limit: number = 10) {
+        let combinedResults = []; // Inisialisasi atau reset nilai ke array kosong setiap kali metode dipanggil
+
+        // 1. Mencari di data lokal (menggunakan skip dan limit untuk pagination)
+        const skip = (page - 1) * limit;
+        const localDataResults = await this.data
+            .find({})
+            .skip(skip) // Skip untuk pagination
+            .limit(limit) // Batas hasil berdasarkan limit
+            .slice('Content', 1) // Mengambil hanya bab pertama dari array Content
+            .exec();
+
+        return localDataResults;
+    }
+
+
     async searchWikipedia(searchTerm: string) {
         // Mengecek apakah data sudah ada berdasarkan judul
         let existingData: any = [];

@@ -8,6 +8,5 @@ const userInstance = Users.getInstances();
 export async function POST(req:NextRequest) {
     const user = await userInstance.authRequest(req)
     if(!user) return NextResponse.json({msg: "Invalid Authentication."}, { status: 401 })
-
     return NextResponse.json(user, { status: 200 })
 }

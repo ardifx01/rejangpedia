@@ -12,19 +12,24 @@ export async function POST(req: NextRequest) {
 
   try {
     let result = await userInstance.login(username, password);
-
     if (result.username === "Password or Username is incorrect!") {
       return NextResponse.json({ message: "The Password or Username is Incorrect" }, { status: 401 });
     }
-    const tokenFunction = await userInstance.createAccessToken(result.id!.toString());
+
+    const tokenFunction = await userInstance.createAccessToken(result._id.toString());
     const token = tokenFunction.newToken;
 
-    // Create a response instance
-    const response = NextResponse.json({ token });
+    // Create a new response instance
+    const response = new NextResponse(JSON.stringify({ token }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-    // Set cookies
+    // Set cookies manually
     response.cookies.set('refreshtoken', tokenFunction.refreshToken, {
-      path: '/api/user/refreshToken',
+      path: '/api/user/session/token/refresh',
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60, // 30 days in seconds
     });

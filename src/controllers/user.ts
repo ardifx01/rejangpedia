@@ -89,6 +89,7 @@ class Users {
         const newUser: userType = {
             username: username.replace(/<[^>]+>/g, ""), //! )====> Bikin supaya gak nambahin html <></> dan kawan kawan<(0O0)/
             desc: "", //! )
+            atmin: false,
             password: password,
         };
 
@@ -101,7 +102,7 @@ class Users {
         //Login
         try {
             const user = await this.#users.findOne({
-                username: username.replace(/<[^>]+>/g, ""),
+                username: username,
             });
             if (!user) {
                 return this.#error[1]; // User not found or banned
@@ -110,9 +111,7 @@ class Users {
             const isPasswordValid = await bcrypt.compare(btoa(password), user.password || ""); //? check apakah passwordnya sesuai
             if (!isPasswordValid) return this.#error[1]; // Invalid password
 
-            return {
-                username: user.username.replace(/<[^>]+>/g, ""),
-            };
+            return user;
         } catch (error) {
             console.error("Error during login:", error);
             return this.#error[1]; // Handle potential errors during database query
