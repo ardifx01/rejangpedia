@@ -1,5 +1,5 @@
 "use client"
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 
 interface FormDataState {
   title: string;
@@ -16,7 +16,65 @@ const NewArticle = () => {
     pembuat: "",
     image: null,
   });
+const [user, setUser] = useState<userType | any>(null);
 
+    const refreshAccessToken = async () => {
+        try {
+            if (sessionStorage.getItem("token")) {
+                return sessionStorage.getItem("token");
+            }
+
+            const response = await fetch("/api/user/refreshToken", {
+                method: "POST",
+                credentials: "include", // Ensure cookies are sent
+            });
+
+            if (!response.ok) {
+                return (window.location.href = "/");
+            }
+
+            const data = await response.json();
+            if (!data.token) return window.location.href = "/";
+            sessionStorage.setItem("token", data.token);
+            return data.token;
+        } catch (error) {
+            console.error("Error refreshing access token:", error);
+            return null;
+        }
+    };
+
+    useEffect(() => {
+        async function fetchUserData() {
+            try {
+                const tokenTemp = await refreshAccessToken();
+                if (!tokenTemp) {
+                    console.warn("No token available");
+                    return;
+                }
+
+                const response = await fetch(`/api/user/session/token/check`, {
+                    method: "POST",
+                    headers: { Authorization: `Bearer ${tokenTemp}` },
+                });
+
+                if (!response.ok) {
+                    window.location.href = "/";
+                }
+
+                const check = await response.json();
+                setUser(check);
+               
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+                setUser(null);
+            }
+        }
+
+        // Only fetch data if user is null
+        if (user === null) {
+            fetchUserData();
+        }
+    }, [user]);
   const previewPhoto = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -38,7 +96,7 @@ const NewArticle = () => {
     const data = new FormData();
     data.append("title", formData.title);
     data.append("link", formData.link);
-    data.append("pembuat", formData.pembuat);
+    data.append("pembuat", user.username);
     if (formData.image) {
       data.append("image", formData.image);
     }
@@ -72,10 +130,7 @@ const NewArticle = () => {
           <label htmlFor="link">Link Video (Optional):</label>
           <input type="text" id="link" name="link" className="form-control" value={formData.link} onChange={handleChange} />
         </div>
-        <div className="form-group">
-          <label htmlFor="pembuat">Pembuat (Optional):</label>
-          <input type="text" id="pembuat" name="pembuat" className="form-control" value={formData.pembuat} onChange={handleChange} />
-        </div>
+
         <div className="form-group">
           <label htmlFor="image">Cover Image:</label>
           <input type="file" name="image" id="image" className="form-control-file" required onChange={previewPhoto} />
