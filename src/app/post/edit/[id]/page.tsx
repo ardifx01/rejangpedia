@@ -25,17 +25,18 @@ const NewArticle = () => {
         fetch(`/api/post/${id}`)
             .then((response) => response.json())
             .then((data) => {
+                console.log(data.data)
                 if (data.data) {
                     setFormData({
-                        title: data.data.title,
-                        link: data.data.link || "",
-                        pembuat: data.data.pembuat || "",
+                        title: data.data.Title,
+                        link: data.data.Link || "",
+                        pembuat: data.data.Pembuat || "",
                         image: null, // Tidak bisa langsung set File, harus konversi dulu
                     });
 
                     // Jika ada gambar, set preview dari URL
-                    if (data.data.image) {
-                        setPreview(data.data.image);
+                    if (data.data.Image) {
+                        setPreview(data.data.Image);
                     }
                 }
                 setLoading(false);
