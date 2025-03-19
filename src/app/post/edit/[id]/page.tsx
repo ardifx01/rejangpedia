@@ -1,6 +1,10 @@
 "use client"
 import { useParams } from "next/navigation";
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import dynamic from "next/dynamic";
+import "react-quill-new/dist/quill.snow.css";
+
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 interface FormDataState {
     title: string;
@@ -20,12 +24,12 @@ const NewArticle = () => {
 
     const { id } = useParams();
     const [loading, setLoading] = useState(true);
+    const [content, setContent] = useState("");
 
     useEffect(() => {
         fetch(`/api/post/${id}`)
             .then((response) => response.json())
             .then((data) => {
-                console.log(data.data)
                 if (data.data) {
                     setFormData({
                         title: data.data.Title,
@@ -38,6 +42,7 @@ const NewArticle = () => {
                     if (data.data.Image) {
                         setPreview(data.data.Image);
                     }
+                    setContent(data.data.content)
                 }
                 setLoading(false);
             })
@@ -114,6 +119,9 @@ const NewArticle = () => {
                     {preview && (
                         <img src={preview} style={{ width: "460px", maxWidth: "100%", border: "2px solid #ccc", objectFit: "cover", borderRadius: "24px" }} className="img-fluid" alt="Preview" />
                     )}
+                </div>
+                <div className="form-group">
+                    <ReactQuill id="content" value={content} onChange={setContent}  />
                 </div>
                 <button type="submit" className="btn btn-info mt-3 rounded-lg">
                     <i className="fa fa-paper-plane" aria-hidden="true"></i> Kirim

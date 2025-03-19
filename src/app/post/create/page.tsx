@@ -1,5 +1,9 @@
 "use client"
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import dynamic from "next/dynamic";
+import "react-quill-new/dist/quill.snow.css";
+
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 interface FormDataState {
   title: string;
@@ -17,6 +21,8 @@ const NewArticle = () => {
     image: null,
   });
 const [user, setUser] = useState<userType | any>(null);
+const [content, setContent] = useState("");
+
 
     const refreshAccessToken = async () => {
         try {
@@ -30,11 +36,11 @@ const [user, setUser] = useState<userType | any>(null);
             });
 
             if (!response.ok) {
-                return (window.location.href = "/");
+                //return (window.location.href = "/");
             }
 
             const data = await response.json();
-            if (!data.token) return window.location.href = "/";
+            if (!data.token) //return window.location.href = "/";
             sessionStorage.setItem("token", data.token);
             return data.token;
         } catch (error) {
@@ -58,7 +64,7 @@ const [user, setUser] = useState<userType | any>(null);
                 });
 
                 if (!response.ok) {
-                    window.location.href = "/";
+                    //window.location.href = "/user/login";
                 }
 
                 const check = await response.json();
@@ -97,6 +103,7 @@ const [user, setUser] = useState<userType | any>(null);
     data.append("title", formData.title);
     data.append("link", formData.link);
     data.append("pembuat", user.username);
+    data.append("content", content)
     if (formData.image) {
       data.append("image", formData.image);
     }
@@ -139,6 +146,9 @@ const [user, setUser] = useState<userType | any>(null);
           {preview && (
             <img src={preview} style={{ width: "460px", maxWidth: "100%", border: "2px solid #ccc", objectFit: "cover", borderRadius: "24px" }} className="img-fluid" alt="Preview" />
           )}
+        </div>
+        <div className="form-group">
+        <ReactQuill id="content" value={content} onChange={setContent}  />
         </div>
         <button type="submit" className="btn btn-info mt-3 rounded-lg">
           <i className="fa fa-paper-plane" aria-hidden="true"></i> Kirim
