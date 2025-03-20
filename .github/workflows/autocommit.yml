@@ -1,56 +1,34 @@
-- name: Penghijauan
-  uses: stefanzweifel/git-auto-commit-action@v5.1.0
-  with:
-    # Optional. Commit message for the created commit.
-    # Defaults to "Apply automatic changes"
-    commit_message: Siram Tanaman
+name: Penghijauan
 
-    # Optional. Local and remote branch name where commit is going to be pushed
-    # Defaults to the current branch.
-    # You might need to set `create_branch: true` if the branch does not exist.
-    branch: feature-123
+on:
+  push:
+    branches:
+      - main
 
-    # Optional. Options used by `git-commit`.
-    # See https://git-scm.com/docs/git-commit#_options
-    commit_options: '--no-verify --signoff'
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    # Optional glob pattern of files which should be added to the commit
-    # Defaults to all (.)
-    file_pattern: '*.jsx src/*.js tests/*.js'
-
-    # Optional. Local file path to the repository.
-    # Defaults to the root of the repository.
-    repository: .
-
-    # Optional commit user and author settings
-    commit_user_name: MFathinHalim # defaults to "github-actions[bot]"
-    commit_user_email: halimfathin7@gmail.com # defaults to "41898282+github-actions[bot]@users.noreply.github.com"
-    commit_author: MFathinHalim <MFathinHalim@github.com> # defaults to GitHub's noreply email
-
-    # Optional. Tag name being created in the local repository and 
-    # pushed to remote repository and defined branch.
-    tagging_message: 'v1.0.0'
-
-    # Optional. Option used by `git-status` to determine if the repository is dirty.
-    status_options: '--untracked-files=no'
-
-    # Optional. Options used by `git-add`.
-    add_options: '-u'
-
-    # Optional. Options used by `git-push`.
-    push_options: '--force'
-    
-    # Optional. Disable dirty check and always try to create a commit and push
-    skip_dirty_check: true    
-    
-    # Optional. Skip internal call to `git fetch`
-    skip_fetch: true    
-    
-    # Optional. Skip internal call to `git checkout`
-    skip_checkout: true
-
-    # Optional. Prevents the shell from expanding filenames.
-    disable_globbing: true
-
-    # Optional. Create given branch name in local and remote repository.
-    create_branch: true
+      - name: Commit and Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v5.1.0
+        with:
+          commit_message: "Siram Tanaman"
+          branch: feature-123
+          commit_options: '--no-verify --signoff'
+          file_pattern: '*.jsx src/*.js tests/*.js'
+          repository: .
+          commit_user_name: "MFathinHalim"
+          commit_user_email: "halimfathin7@gmail.com"
+          commit_author: "MFathinHalim <MFathinHalim@github.com>"
+          tagging_message: 'v1.0.0'
+          status_options: '--untracked-files=no'
+          add_options: '-u'
+          push_options: '--force'
+          skip_dirty_check: true
+          skip_fetch: true
+          skip_checkout: true
+          disable_globbing: true
+          create_branch: true
