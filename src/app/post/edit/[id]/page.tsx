@@ -13,7 +13,9 @@ interface FormDataState {
     image: File | null;
 }
 
-const NewArticle = () => {
+type ContentType = { babTitle: string; babContent: string }[] | string;
+
+const EditArticle = () => {
     const [preview, setPreview] = useState<string | null>(null);
     const [formData, setFormData] = useState<FormDataState>({
         title: "",
@@ -24,7 +26,7 @@ const NewArticle = () => {
 
     const { id } = useParams();
     const [loading, setLoading] = useState(true);
-    const [content, setContent] = useState("");
+    const [content, setContent] = useState<ContentType>("");
 
     useEffect(() => {
         fetch(`/api/post/${id}`)
@@ -35,14 +37,18 @@ const NewArticle = () => {
                         title: data.data.Title,
                         link: data.data.Link || "",
                         pembuat: data.data.Pembuat || "",
-                        image: null, // Tidak bisa langsung set File, harus konversi dulu
+                        image: null,
                     });
 
-                    // Jika ada gambar, set preview dari URL
                     if (data.data.Image) {
                         setPreview(data.data.Image);
                     }
-                    setContent(data.data.content)
+
+                    if (Array.isArray(data.data.Content)) {
+                        setContent(data.data.Content);
+                    } else {
+                        setContent(data.data.Content || "");
+                    }
                 }
                 setLoading(false);
             })
@@ -68,6 +74,26 @@ const NewArticle = () => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
 
+    const handleContentChange = (value: string, index?: number, isTitle?: boolean) => {
+        if (Array.isArray(content) && index !== undefined) {
+            const newContent = [...content];
+            if (isTitle) {
+                newContent[index].babTitle = value;
+            } else {
+                newContent[index].babContent = value;
+            }
+            setContent(newContent);
+        } else {
+            setContent(value);
+        }
+    };
+
+    const addNewBab = () => {
+        if (Array.isArray(content)) {
+            setContent([...content, { babTitle: "", babContent: "" }]);
+        }
+    };
+
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
         const data = new FormData();
@@ -77,6 +103,7 @@ const NewArticle = () => {
         if (formData.image) {
             data.append("image", formData.image);
         }
+        data.append("content", JSON.stringify(content));
 
         try {
             const response = await fetch("/api/post", {
@@ -105,24 +132,82 @@ const NewArticle = () => {
             <form onSubmit={handleSubmit} encType="multipart/form-data">
                 <div className="form-group">
                     <label htmlFor="title">Title:</label>
-                    <input type="text" id="title" name="title" className="form-control" value={formData.title} onChange={handleChange} />
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        className="form-control"
+                        value={formData.title}
+                        onChange={handleChange}
+                    />
                 </div>
                 <div className="form-group">
                     <label htmlFor="link">Link Video (Optional):</label>
-                    <input type="text" id="link" name="link" className="form-control" value={formData.link} onChange={handleChange} />
+                    <input
+                        type="text"
+                        id="link"
+                        name="link"
+                        className="form-control"
+                        value={formData.link}
+                        onChange={handleChange}
+                    />
                 </div>
                 <div className="form-group">
                     <label htmlFor="image">Cover Image:</label>
-                    <input type="file" name="image" id="image" className="form-control-file" onChange={previewPhoto} />
+                    <input
+                        type="file"
+                        name="image"
+                        id="image"
+                        className="form-control-file"
+                        onChange={previewPhoto}
+                    />
                 </div>
                 <div className="form-group">
                     {preview && (
-                        <img src={preview} style={{ width: "460px", maxWidth: "100%", border: "2px solid #ccc", objectFit: "cover", borderRadius: "24px" }} className="img-fluid" alt="Preview" />
+                        <img
+                            src={preview}
+                            style={{
+                                width: "460px",
+                                maxWidth: "100%",
+                                border: "2px solid #ccc",
+                                objectFit: "cover",
+                                borderRadius: "24px",
+                            }}
+                            className="img-fluid"
+                            alt="Preview"
+                        />
                     )}
                 </div>
+
+                {/* Bagian Content */}
                 <div className="form-group">
-                    <ReactQuill id="content" value={content} onChange={setContent}  />
+                    <label htmlFor="content">Isi Artikel:</label>
+                    {Array.isArray(content) ? (
+                        <>
+                            {content.map((bab, index) => (
+                                <div key={index} className="mb-3">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Judul Bab"
+                                        value={bab.babTitle}
+                                        onChange={(e) => handleContentChange(e.target.value, index, true)}
+                                    />
+                                    <ReactQuill
+                                        value={bab.babContent}
+                                        onChange={(value) => handleContentChange(value, index, false)}
+                                    />
+                                </div>
+                            ))}
+                            <button type="button" className="btn btn-secondary mt-2" onClick={addNewBab}>
+                                Tambah Bab Baru
+                            </button>
+                        </>
+                    ) : (
+                        <ReactQuill value={content} onChange={(value) => setContent(value)} />
+                    )}
                 </div>
+
                 <button type="submit" className="btn btn-info mt-3 rounded-lg">
                     <i className="fa fa-paper-plane" aria-hidden="true"></i> Kirim
                 </button>
@@ -131,4 +216,4 @@ const NewArticle = () => {
     );
 };
 
-export default NewArticle;
+export default EditArticle;
