@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron: '0 * * * *'  # Menjalankan setiap jam (opsional)
 
 jobs:
   auto-commit:
@@ -12,22 +14,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Tambahkan perubahan (Update timestamp di Next.js)
+        run: 'echo "Last run: $(date)" > public/timestamp.txt'
+
+      - name: Cek status sebelum commit
+        run: git status
+
       - name: Commit and Push Changes
         uses: stefanzweifel/git-auto-commit-action@v5.1.0
         with:
-          commit_message: "Siram Tanaman"
+          commit_message: "Siram Tanaman - Auto Update"
           branch: feature-123
           commit_options: '--no-verify --signoff'
-          file_pattern: '*'
+          file_pattern: 'public/timestamp.txt'
           repository: .
           commit_user_name: "MFathinHalim"
           commit_user_email: "halimfathin7@gmail.com"
           commit_author: "MFathinHalim <MFathinHalim@github.com>"
           tagging_message: 'v1.0.0'
-          status_options: '--untracked-files=no'
-          add_options: '-u'
+          status_options: ''
+          add_options: '-A'
           push_options: '--force'
-          skip_dirty_check: true
+          skip_dirty_check: false
           skip_fetch: true
           skip_checkout: true
           disable_globbing: true
