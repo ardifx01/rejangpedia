@@ -5,7 +5,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 * * * *'  # Menjalankan setiap jam (opsional)
+    - cron: '0 * * * *'  # Menjalankan setiap jam (opsiona)
 
 jobs:
   auto-commit:
