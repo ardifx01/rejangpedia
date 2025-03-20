@@ -18,7 +18,7 @@ jobs:
           commit_message: "Siram Tanaman"
           branch: feature-123
           commit_options: '--no-verify --signoff'
-          file_pattern: '*.jsx src/*.js tests/*.js'
+          file_pattern: '*'
           repository: .
           commit_user_name: "MFathinHalim"
           commit_user_email: "halimfathin7@gmail.com"
