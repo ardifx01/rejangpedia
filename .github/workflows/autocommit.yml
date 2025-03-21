@@ -33,7 +33,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5.1.0
         with:
           commit_message: "Siram Tanaman - Auto Update"
-          branch: feature-123
+          branch: main
           commit_options: '--no-verify --signoff'
           file_pattern: 'public/timestamp.txt'
           repository: .
@@ -48,4 +48,3 @@ jobs:
           skip_fetch: true
           skip_checkout: true
           disable_globbing: true
-          create_branch: true
