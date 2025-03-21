@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Tambahkan perubahan (Update timestamp di Next.js)
-        run: 'echo "Last run: $(date)" > public/timestamp.txt'
+        run: echo "Last run: $(date)" > public/timestamp.txt
 
       - name: Cek status sebelum commit
         run: git status
