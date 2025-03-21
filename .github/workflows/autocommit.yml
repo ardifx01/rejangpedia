@@ -16,10 +16,18 @@ jobs:
 
       - name: Tambahkan perubahan (Update timestamp di Next.js)
         run: |
+          echo "Membuat folder public jika belum ada..."
+          mkdir -p public
           echo "Last run: $(date)" > public/timestamp.txt
+          echo "Isi file timestamp.txt:"
+          cat public/timestamp.txt  # Untuk debugging, pastikan file berisi data yang benar
 
       - name: Cek status sebelum commit
-        run: git status
+        run: |
+          echo "Menampilkan status git:"
+          git status
+          echo "File yang ada di public folder:"
+          ls public
 
       - name: Commit and Push Changes
         uses: stefanzweifel/git-auto-commit-action@v5.1.0
