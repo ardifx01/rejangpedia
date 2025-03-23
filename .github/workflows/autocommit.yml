@@ -37,9 +37,6 @@ jobs:
           commit_options: '--no-verify --signoff'
           file_pattern: 'public/timestamp.txt'
           repository: .
-          commit_user_name: "MFathinHalim"
-          commit_user_email: "halimfathin7@gmail.com"
-          commit_author: "MFathinHalim <MFathinHalim@github.com>"
           tagging_message: 'v1.0.0'
           status_options: ''
           add_options: '-A'
