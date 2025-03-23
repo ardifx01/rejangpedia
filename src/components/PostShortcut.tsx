@@ -1,14 +1,14 @@
 export default function PostShortcut({ post }: any) {
   return (
     <>
-      <li key={post._id} className="mb-4">
-        <div className="d-flex flex-column flex-md-row align-items-md-center">
+      <li key={post._id} className="mb-4 list-unstyled">
+        <div className="d-flex flex-column flex-md-row gap-3">
           {post.Image && (
             <img
-              className="listing-image mb-3 mb-md-0 mr-md-3"
+              className="me-3"
               style={{
-                width: "160px",
-                height: "110px",
+                width: "90px",
+                height: "90px",
                 objectFit: "cover",
                 borderRadius: "12px",
               }}
@@ -18,9 +18,9 @@ export default function PostShortcut({ post }: any) {
           )}
           <div className={!post.Image ? "" : "ml-md-3"}>
             <a className="text-decoration-none" href={`/details/${post.id}`}>
-              <h5 className="mb-2">{post.Title}</h5>
+              <h3 className="mb-0">{post.Title}</h3>
               {post.Content && (
-                <p className="text-muted">
+                <p className="text-mute m-0">
                   {
                     typeof post.Content === "string"
                       ? post.Content.replace(/<[^>]+>/g, "").substring(0, 100) // Jika Content adalah string
@@ -31,6 +31,7 @@ export default function PostShortcut({ post }: any) {
                   ...
                 </p>
               )}
+              <p className="mb-1">- By {post.Pembuat}</p>
             </a>
           </div>
         </div>

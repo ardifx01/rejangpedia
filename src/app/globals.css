@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
 :root {
   --text: #121212;
+  --muted: #12121275;
   --background: #f7fcfe;
   --primary: #8DC53E;
   --primary-border: #99e232;
@@ -12,7 +13,8 @@
 /* Mode Gelap */
 @media (prefers-color-scheme: dark) {
   :root {
-    --text: #f7fcfe;                /* Ubah warna teks agar lebih terang */
+    --text: #f7fcfe; 
+    --muted: #ffffff8b;
     --background: #121212;          /* Background gelap */
     --primary: #8DC53E;
     --primary-border: #99e232;
@@ -23,6 +25,7 @@
     color: #dfe5e881 !important;
   }
 }
+
 img {
   max-width: 100%;
   border-radius: 12px !important;
@@ -43,6 +46,9 @@ body, .navbar {
 a {
   color: var(--text) !important;
   text-decoration: none !important;
+}
+.text-mute {
+  color: var(--muted) !important;
 }
 .form-control {
   background-color: var(--accent) !important;

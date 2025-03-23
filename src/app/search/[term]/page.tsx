@@ -55,12 +55,12 @@ export default function Homepage() {
     }, [inView]); // Memastikan efek ini dijalankan saat `inView` berubah
 
     return (
-        <div>
+        <div className="container">
             <div className='px-3 py-3'>
                 {posts.length > 0 ? (
-                    <div className="row">
+                    <div>
                         {posts.map((post, index) => (
-                            <div key={post._id || index} className="col-md-3 col-sm-6">
+                            <div key={post._id || index}>
                                 <PostShortcut post={post} />
                             </div>
                         ))}

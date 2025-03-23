@@ -1,28 +1,28 @@
 "use client";
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname } from "next/navigation"; // Untuk menangkap pathname
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const Navbar = () => {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
-  const pathname = usePathname(); // Hook to get the current pathname
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
-
-  const closeDropdown = () => {
-    setDropdownOpen(false);
-  };
+  const pathname = usePathname(); // Menangkap full URL path (contoh: "/search/javascript")
 
   useEffect(() => {
-    require("bootstrap/dist/js/bootstrap.js")
-  }, [])
+    // Ambil [term] dari dynamic route "/search/[term]"
+    const extractedTerm = pathname.split("/search/")[1] || "";
+    setSearchTerm(decodeURIComponent(extractedTerm)); // Mengisi input dengan [term]
+  }, [pathname]);
+
+  useEffect(() => {
+    require("bootstrap/dist/js/bootstrap.js");
+  }, []);
+  
+  if (pathname === "/") return
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollPos = window.pageYOffset;
@@ -33,44 +33,40 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [prevScrollPos]);
 
-  const openApp = () => {
-    const appUrl = `rejang://pedia${window.location.href.replace("https://rejangpedia.glitch.me", "")}`;
-    window.location.href = appUrl;
-  };
-  if (pathname === "/") return
-
   function search() {
-    window.location.href = "/search/" + searchTerm;
+    window.location.href = `/search/${searchTerm}`;
   }
+
   return (
     <>
-      {/* Navbar Dekstop */}
+      {/* Navbar Desktop & Mobile */}
       <nav className="navbar navbar-expand-lg sticky-top w-100" id="khususDekstop">
-      <a className="navbar-brand ps-3" href="/">
-        <img src="/logo.png" width="100" height="45" alt="" />
-      </a>
-        <form className="form-inline w-100 pe-3 d-none d-lg-block">
-          <div>
-          <FontAwesomeIcon icon={faSearch} className="position-absolute search-icon-navbar" />
-          <input
-            autoComplete="off"
-            type="text"
-            className="form-control search-input custom-input shadow-sm mr-1 rounded-pill p-2 px-4 ps-5"
-            id="searchInput"
-            onKeyUp={(e) => {
-              //@ts-ignore
-              setSearchTerm(e.target.value);
-              if (e.key === "Enter") {
-                search();
-                return;
-              }
-            }}
-            placeholder="Search"
-          /></div>
-        </form>
+        <div className="container-fluid d-flex align-items-center">
+          {/* Logo */}
+          <a className="navbar-brand" href="/">
+            <img src="/logo.png" width="100" height="45" alt="Logo" />
+          </a>
+
+          {/* Form Pencarian yang tetap di samping logo */}
+          <form className="d-flex flex-grow-1">
+            <div className="input-group">
+              <input
+                autoComplete="off"
+                type="text"
+                className="form-control rounded-pill shadow-sm"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") {
+                    search();
+                  }
+                }}
+                placeholder="Search"
+              />
+            </div>
+          </form>
+        </div>
       </nav>
-
-
     </>
   );
 };
