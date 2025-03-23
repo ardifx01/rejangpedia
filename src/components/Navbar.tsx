@@ -1,8 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation"; // Untuk menangkap pathname
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const Navbar = () => {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
@@ -20,7 +18,7 @@ const Navbar = () => {
   useEffect(() => {
     require("bootstrap/dist/js/bootstrap.js");
   }, []);
-  
+
   if (pathname === "/") return
 
   useEffect(() => {
@@ -43,7 +41,7 @@ const Navbar = () => {
       <nav className="navbar navbar-expand-lg sticky-top w-100" id="khususDekstop">
         <div className="container-fluid d-flex align-items-center">
           {/* Logo */}
-          <a className="navbar-brand" href="/">
+          <a className="navbar-brand d-none d-md-block" href="/">
             <img src="/logo.png" width="100" height="45" alt="Logo" />
           </a>
 
