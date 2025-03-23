@@ -36,7 +36,7 @@ const ArticlePage = () => {
           </h3>
           <h1 id="title">{data.Title}</h1>
 
-          <p className="dibuat mr-auto" style={{ fontSize: "15px", maxWidth: "100%", paddingLeft: "10px", borderLeft: "3px solid var(--accent)" }}>
+          <p className="dibuat mr-auto" style={{ fontSize: "15px", maxWidth: "100%", paddingLeft: "10px", borderLeft: "3px solid #424347" }}>
             <span style={{ color: "var(--primary)" }}>Ditulis oleh</span> {data.Pembuat} {data.Waktu ? ` pada ${data.Waktu}` : " pada 07-Maret-2023"}
             {data.Diedit && (
               <>
