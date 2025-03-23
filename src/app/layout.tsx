@@ -29,8 +29,6 @@ export const metadata = {
     images: [
       {
         url: "/logo.png", // Featured image for OG (should be at least 1200x630 for best results)
-        width: 1200,
-        height: 630,
         alt: "Rejangpedia Logo",
       },
     ],
