@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next-sitemap",
+    "build:sitemap": "next-sitemap",
     "start": "next start",
     "lint": "next lint"
   },
@@ -31,6 +32,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "next-sitemap": "^4.2.3",
     "typescript": "^5"
   }
 }
