@@ -105,7 +105,7 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ id }) => {
             <button className="btn btn-primary rounded-pill mr-1 px-3" onClick={copyLink}>
               <FontAwesomeIcon icon={faShare} />
             </button>
-            <a className="btn btn-secondary rounded-pill px-3" href={`/edit/${data.id}`}>
+            <a className="btn btn-secondary rounded-pill px-3" href={`/post/edit/${data.id}`}>
               <FontAwesomeIcon icon={faPencil} /> Edit Article
             </a>
           </div>
