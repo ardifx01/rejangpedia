@@ -63,6 +63,7 @@ export default function RootLayout({
         <meta name="description" content="Ensiklopedia budaya Rejang yang membahas sejarah, bahasa, dan budaya warisan leluhur masyarakat Rejang." />
         <meta name="keywords" content="Rejangpedia, Budaya Rejang, Sejarah Rejang, Ensiklopedia, Bahasa Rejang, Warisan Budaya" />
         <meta name="google-site-verification" content="GcCtsibceSskv7l9WM_5t29jLRwyOsvsoFln7lUP_sk" />
+        <meta name="google-adsense-account" content="ca-pub-2998592050723815" />
       </head>
       <body>
         <Navbar />
