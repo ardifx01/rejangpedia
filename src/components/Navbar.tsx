@@ -67,7 +67,7 @@ const Navbar = () => {
           </button>
           {dropdownOpen && (
             <div className="dropdown-menu bg-dark show" aria-labelledby="navbarDropdown">
-              <Link className="dropdown-item" href="/tentang" onClick={closeDropdown}>
+              <Link className="dropdown-item" href="/rules" onClick={closeDropdown}>
                 <i className="fa fa-question"></i> Tentang
               </Link>
               <div className="dropdown-divider"></div>
