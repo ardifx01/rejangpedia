@@ -46,7 +46,7 @@ export default function SignUpForm() {
 
    const refreshAccessToken = async () => {
         if(sessionStorage.getItem("token")) {
-          return window.location.href = "/home";  
+          return window.location.href = "/";  
         }
 
         const response = await fetch("/api/user/sesion/token/refresh", {
@@ -54,7 +54,7 @@ export default function SignUpForm() {
           credentials: "include", // Ensure cookies are sent
         });    const refreshAccessToken = async () => {
         if(sessionStorage.getItem("token")) {
-          return window.location.href = "/home";  
+          return window.location.href = "/";  
         }
 
         const response = await fetch("/api/user/sesion/token/refresh", {
@@ -69,7 +69,7 @@ export default function SignUpForm() {
         const data = await response.json();
         if (!data.token) return;
         sessionStorage.setItem("token", data.token);
-        return window.location.href = "/home"; 
+        return window.location.href = "/"; 
       }
 
         if (!response.ok) {
@@ -79,7 +79,7 @@ export default function SignUpForm() {
         const data = await response.json();
         if (!data.token) return;
         sessionStorage.setItem("token", data.token);
-        return window.location.href = "/home"; 
+        return window.location.href = "/"; 
       }
     
     useEffect(() => {
@@ -133,7 +133,7 @@ export default function SignUpForm() {
                                 <button
                                     type='button'
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className='secondary-btn btn mt-2 '
+                                    className='btn-secondary btn mt-2 '
                                     aria-label='Toggle Password Visibility'
                                 >
                                     Show Password <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
@@ -142,12 +142,12 @@ export default function SignUpForm() {
                         </div>
                         <h5 className='mt-3'>
                             Already have an account?{" "}
-                            <a href='/login' className='bold text-info text-decoration-underline'>
+                            <a href='/user/login' className='bold text-info text-decoration-underline'>
                                 Log in
                             </a>
                         </h5>
                         <div className='text-end mt-2'>
-                            <button type='submit' className='btn btn-sm primary-btn rounded-pill px-4 py-1'>
+                            <button type='submit' className='btn btn-sm btn-secondary rounded-pill px-4 py-1'>
                                 Sign Up
                             </button>
                         </div>

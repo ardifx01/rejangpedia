@@ -40,7 +40,7 @@ export default function LoginForm() {
 
     const refreshAccessToken = async () => {
         if(sessionStorage.getItem("token")) {
-          return window.location.href = "/home";  
+          return window.location.href = "/";  
         }
 
         const response = await fetch("/api/user/session/token/refresh", {
@@ -55,7 +55,7 @@ export default function LoginForm() {
         const data = await response.json();
         if (!data.token) return;
         sessionStorage.setItem("token", data.token);
-        return window.location.href = "/home"; 
+        return window.location.href = "/"; 
       }
     
     useEffect(() => {
@@ -109,7 +109,7 @@ export default function LoginForm() {
                                 <button
                                     type='button'
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className='secondary-btn btn mt-2 '
+                                    className='btn-primary btn mt-2 '
                                     aria-label='Toggle Password Visibility'
                                 >
                                     Show Password <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
@@ -119,12 +119,12 @@ export default function LoginForm() {
 
                         <h5 className='mt-3'>
                             Don't have an account?{" "}
-                            <a href='/signup' className='bold text-info text-decoration-underline'>
+                            <a href='/user/signup' className='bold text-info text-decoration-underline'>
                                 Sign Up
                             </a>
                         </h5>
                         <div className='text-end mt-2'>
-                            <button type='submit' className='btn btn-sm primary-btn rounded-pill px-4 py-1'>
+                            <button type='submit' className='btn btn-sm btn-primary rounded-pill px-4 py-1'>
                                 Log In
                             </button>
                         </div>
