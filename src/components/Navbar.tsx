@@ -1,14 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const Navbar = () => {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
-  const router = useRouter();
+  const pathname = usePathname(); // Hook to get the current pathname
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
@@ -37,7 +37,7 @@ const Navbar = () => {
     const appUrl = `rejang://pedia${window.location.href.replace("https://rejangpedia.glitch.me", "")}`;
     window.location.href = appUrl;
   };
-  if (window.location.pathname === "/") return
+  if (pathname === "/") return
 
   function search() {
     window.location.href = "/search/" + searchTerm;
@@ -49,7 +49,7 @@ const Navbar = () => {
         <Link className="navbar-brand ps-3" href="/">
           rejangpedia
         </Link>
-        <form className="form-inline w-100 pe-3">
+        <form className="form-inline w-100 pe-3 d-none d-lg-block">
           <div>
           <FontAwesomeIcon icon={faSearch} className="position-absolute search-icon-navbar" />
           <input
