@@ -3,6 +3,7 @@ import { useParams } from "next/navigation";
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
+import LoadingSpinner from "@/components/Loading";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -123,7 +124,7 @@ const EditArticle = () => {
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <LoadingSpinner />;
   }
 
   return (

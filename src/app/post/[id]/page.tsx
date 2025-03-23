@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import styles from './page.module.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faShare } from "@fortawesome/free-solid-svg-icons";
+import LoadingSpinner from "@/components/Loading";
 
 const ArticlePage = () => {
   const { id } = useParams();
@@ -24,7 +25,7 @@ const ArticlePage = () => {
   }, [id]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <LoadingSpinner />;
   }
 
   return (
