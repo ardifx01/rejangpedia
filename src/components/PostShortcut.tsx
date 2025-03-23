@@ -17,7 +17,7 @@ export default function PostShortcut({ post }: any) {
             />
           )}
           <div className={!post.Image ? "" : "ml-md-3"}>
-            <a className="text-decoration-none" href={`/details/${post.id}`}>
+            <a className="text-decoration-none" href={`/post/${post.id}`}>
               <h3 className="mb-0">{post.Title}</h3>
               {post.Content && (
                 <p className="text-mute m-0">
