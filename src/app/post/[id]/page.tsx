@@ -8,9 +8,9 @@ type PageProps = {
   };
 };
 
-// Fungsi generate dynamic metadata
+// Corrected function without `await` on `params`
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { id } = params;
+  const { id } = params; // Direct destructuring
   const res = await fetch(`https://rejangpedia.vercel.app/api/post/${id}`, { cache: "no-store" });
   const json = await res.json();
   const data = json.data;
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-// Render halaman utama
+// Correctly typed Page function with `params`
 export default function Page({ params }: PageProps) {
-  return <ArticlePage id={params.id} />; // Pass ID as props
+  return <ArticlePage id={params.id} />; // Pass `id` correctly
 }
