@@ -1,6 +1,4 @@
-import { IConfig } from 'next-sitemap';
-
-const config: IConfig = {
+const config = {
   siteUrl: process.env.SITE_URL || 'https://rejangpedia.vercel.app/',
   generateRobotsTxt: true, // Membuat robots.txt secara otomatis
   changefreq: 'daily', // Seberapa sering konten berubah
