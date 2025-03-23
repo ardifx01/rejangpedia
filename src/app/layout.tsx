@@ -62,7 +62,7 @@ export default function RootLayout({
         <title>Rejangpedia - Punyo Kito Galo</title>
         <meta name="description" content="Ensiklopedia budaya Rejang yang membahas sejarah, bahasa, dan budaya warisan leluhur masyarakat Rejang." />
         <meta name="keywords" content="Rejangpedia, Budaya Rejang, Sejarah Rejang, Ensiklopedia, Bahasa Rejang, Warisan Budaya" />
-        <meta name="google-site-verification" content="5hgD0z6jKEII9VOKwLGeuBVCvR_BcV2607yUgpqJqIU" />
+        <meta name="google-site-verification" content="GcCtsibceSskv7l9WM_5t29jLRwyOsvsoFln7lUP_sk" />
       </head>
       <body>
         <Navbar />
