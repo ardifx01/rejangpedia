@@ -3,6 +3,7 @@ import { Model } from "mongoose";
 import axios from "axios";
 import dbConnect from "@/utils/mongoose";
 import { v4 as uuidv4 } from 'uuid';
+import { parse } from "path";
 
 await dbConnect();
 
@@ -55,7 +56,6 @@ export default class rejangpedia {
         else {
             mahiru = await this.data.findOne({ id: id }).exec();
         }
-
         //cek dulu data nya null or tidak
         if (!mahiru) return { data: "Data Not Found" };
 
@@ -98,7 +98,7 @@ export default class rejangpedia {
 
         // 1. Mencari di data lokal (menggunakan skip dan limit untuk pagination)
         const skip = (page - 1) * limit;
-        const localDataResults = await this.data
+        const localDataResults = await this.ongoingData
             .find({})
             .skip(skip) // Skip untuk pagination
             .limit(limit) // Batas hasil berdasarkan limit
@@ -108,6 +108,20 @@ export default class rejangpedia {
         return localDataResults;
     }
 
+    async postList(page: number = 1, limit: number = 10) {
+        let combinedResults = []; // Inisialisasi atau reset nilai ke array kosong setiap kali metode dipanggil
+
+        // 1. Mencari di data lokal (menggunakan skip dan limit untuk pagination)
+        const skip = (page - 1) * limit;
+        const localDataResults = await this.data
+            .find({})
+            .skip(skip) // Skip untuk pagination
+            .limit(limit) // Batas hasil berdasarkan limit
+            .slice('Content', 1) // Mengambil hanya bab pertama dari array Content
+            .exec();
+
+        return localDataResults;
+    }
 
     async searchWikipedia(searchTerm: string) {
         // Mengecek apakah data sudah ada berdasarkan judul
@@ -160,22 +174,22 @@ export default class rejangpedia {
         }
     }
 
-    delete(id: string | string[], ongoing: boolean) {
+    async delete(id: string | string[], ongoing: boolean) {
         if (ongoing) {
-            this.ongoingData.deleteOne({ id: id })
+            await this.ongoingData.deleteOne({ id: id })
         } else {
-            this.data.deleteOne({ id: id })
+            await this.data.deleteOne({ id: id })
         }
     }
 
     async edit(data: any) {
-        // Find the document in the "mainModel" collection based on the id
+        // Cari dokumen di koleksi "mainModel" berdasarkan id
         const acceptedData = await this.data.findOne({ id: data.id });
-
         if (!acceptedData) {
-            return; // Handle case where the data doesn't exist
+            return null; // Handle case where the data doesn't exist
         }
-
+    
+        // Dapatkan tanggal sekarang dan format menjadi string "tanggal-bulan-tahun"
         const tanggalSekarang = new Date();
         const namaBulan = [
             "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli",
@@ -185,30 +199,30 @@ export default class rejangpedia {
         const bulan = namaBulan[tanggalSekarang.getMonth()];
         const tahun = tanggalSekarang.getFullYear();
         const formatWaktu = `${tanggal}-${bulan}-${tahun}`;
-
-        // Prepare the updated data
+        
+        // Siapkan data yang akan diperbarui
         const updatedData = {
             id: data.id,
             Title: data.Title,
             Pembuat: acceptedData.Pembuat,
-            Image: `${process.env.urlEndpoint}RejangPedia/image-${data.id}.jpg`,
+            Image: data.Image ? `${process.env.urlEndpoint}RejangPedia/image-${data.id}.jpg` : acceptedData.Image, // Gunakan image baru jika ada
             Diedit: data.Diedit,
-            Link: data.link.replace("/watch?v=", "/embed/"),
-            Waktu: acceptedData.Waktu || "Tidak Diketahui", // Use existing Waktu if available
+            Link: data.Link.replace("/watch?v=", "/embed/"),
+            Waktu: acceptedData.Waktu || "Tidak Diketahui",
             Edit: formatWaktu,
-            Content: JSON.parse(data.content) // Ensure the content is correctly formatted
+            Content: data.Content, // Menyimpan array content
         };
-
-        // Using `updateOne` to either update the document or insert it
+    
+        // Menggunakan `updateOne` untuk memperbarui atau membuat dokumen baru jika tidak ada
         await this.ongoingData.updateOne(
             { id: data.id }, // Find by ID
             { $set: updatedData }, // Update fields
             { upsert: true } // Create a new document if it doesn't exist
         );
-
-        // Return a success message
-        return updatedData ;
+    
+        return updatedData; // Mengembalikan data yang telah diperbarui
     }
+    
     async create(body: Data) {
         const uniqueFileName = uuidv4();
         const tanggalSekarang = new Date();
@@ -231,7 +245,6 @@ export default class rejangpedia {
         const bulan = namaBulan[tanggalSekarang.getMonth()];
         const tahun = tanggalSekarang.getFullYear();
         const currentEpochTime = Date.now();
-
         // Upload the data to MongoDB using the 'goingModel'
         await this.ongoingData.create({
             id: uniqueFileName,

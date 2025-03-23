@@ -28,27 +28,6 @@ const AdminPostList = () => {
         }
     };
 
-    // Handle Accept Button (POST to /api/post/accept/[id])
-    const handleAccept = async (id: string) => {
-        const tokenTemp = await refreshAccessToken();
-        if (!tokenTemp) return console.error("No token available");
-
-        try {
-            const response = await fetch(`/api/post/accept/${id}`, {
-                method: "PUT",
-                headers: { Authorization: `Bearer ${tokenTemp}` },
-            });
-
-            if (response.ok) {
-                console.log(`Post ${id} accepted.`);
-                setData((prevData) => prevData.filter((post) => post.id !== id)); // Remove accepted post
-            } else {
-                console.error(`Failed to accept post ${id}`);
-            }
-        } catch (error) {
-            console.error("Error accepting post:", error);
-        }
-    };
 
         // Handle Accept Button (POST to /api/post/accept/[id])
         const handleDelete = async (id: string) => {
@@ -56,7 +35,7 @@ const AdminPostList = () => {
             if (!tokenTemp) return console.error("No token available");
     
             try {
-                const response = await fetch(`/api/post/delete/ongoing/${id}`, {
+                const response = await fetch(`/api/post/delete/${id}`, {
                     method: "DELETE",
                     headers: { Authorization: `Bearer ${tokenTemp}` },
                 });
@@ -79,7 +58,7 @@ const AdminPostList = () => {
         if (!tokenTemp) return;
 
         try {
-            const res = await fetch(`/api/post/admin/ongoing?page=${pageNum}`, {
+            const res = await fetch(`/api/post/admin?page=${pageNum}`, {
                 method: "GET",
                 headers: { Authorization: `Bearer ${tokenTemp}` },
             });
@@ -133,7 +112,7 @@ const AdminPostList = () => {
         <div className="container">
             <ul className="list-group pl-2 pr-2">
                 <h3 className="mt-3">
-                    <i className="fa fa-spinner" aria-hidden="true"></i> Data OnGoing
+                    <i className="fa fa-spinner" aria-hidden="true"></i> All Data
                 </h3>
 
                 {data.map((entry: any) => (
@@ -165,7 +144,7 @@ const AdminPostList = () => {
                         </div>
                         <div className="d-flex mt-2 gap-2">
                             <a
-                                href={`/post/ongoing/${entry.id}`}
+                                href={`/post/${entry.id}`}
                                 className="btn btn-primary rounded-pill"
                             >
                                 <i className="fa fa-chevron-right" aria-hidden="true"></i> Baca
@@ -175,12 +154,6 @@ const AdminPostList = () => {
                                 onClick={() => handleDelete(entry.id)}
                             >
                                 <i className="fa fa-trash" aria-hidden="true"></i> Delete
-                            </button>
-                            <button
-                                className="btn btn-secondary rounded-pill"
-                                onClick={() => handleAccept(entry.id)}
-                            >
-                                <i className="fa fa-check" aria-hidden="true"></i> Terima
                             </button>
                         </div>
                     </li>

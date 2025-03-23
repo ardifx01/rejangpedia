@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
 
-  const headersList: any = headers();
+  const headersList: any = await headers();
   const authHeader = headersList.get("authorization");
   const token = authHeader && authHeader.split(" ")[1]; // Extract token from Bearer
   if (!token) return NextResponse.json({ error: "Invalid token" }, { status: 401 });

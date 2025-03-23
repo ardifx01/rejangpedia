@@ -28,7 +28,67 @@ const EditArticle = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState<ContentType>("");
+  const [token, setToken] = useState("");
+  const [user, setUser] = useState<userType | any>(null);
 
+  const refreshAccessToken = async () => {
+    try {
+      if (sessionStorage.getItem("token")) {
+        return sessionStorage.getItem("token");
+      }
+
+      const response = await fetch("/api/user/refreshToken", {
+        method: "POST",
+        credentials: "include", // Ensure cookies are sent
+      });
+
+      if (!response.ok) {
+        return (window.location.href = "/");
+      }
+
+      const data = await response.json();
+      if (!data.token) return window.location.href = "/";
+      sessionStorage.setItem("token", data.token);
+      return data.token;
+    } catch (error) {
+      console.error("Error refreshing access token:", error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const tokenTemp = await refreshAccessToken();
+        if (!tokenTemp) {
+          console.warn("No token available");
+          return;
+        }
+        setToken(tokenTemp);
+
+        const response = await fetch(`/api/user/session/token/check`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${tokenTemp}` },
+        });
+
+        if (!response.ok) {
+          window.location.href = "/user/login";
+        }
+
+        const check = await response.json();
+        setUser(check);
+
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setUser(null);
+      }
+    }
+
+    // Only fetch data if user is null
+    if (user === null) {
+      fetchUserData();
+    }
+  }, [user]);
   useEffect(() => {
     fetch(`/api/post/${id}`)
       .then((response) => response.json())
@@ -45,6 +105,7 @@ const EditArticle = () => {
             setPreview(data.data.Image);
           }
 
+          // Handle Content as Array or String
           if (Array.isArray(data.data.Content)) {
             setContent(data.data.Content);
           } else {
@@ -85,7 +146,7 @@ const EditArticle = () => {
       }
       setContent(newContent);
     } else {
-      setContent(value);
+      setContent(value); // Handle as string if not array
     }
   };
 
@@ -104,12 +165,13 @@ const EditArticle = () => {
     if (formData.image) {
       data.append("image", formData.image);
     }
-    data.append("content", JSON.stringify(content));
+    data.append("content", JSON.stringify(content)); // Serialize content array or string
 
     try {
-      const response = await fetch("/api/post", {
+      const response = await fetch("/api/post/edit/" + id , {
         method: "POST",
         body: data,
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.ok) {

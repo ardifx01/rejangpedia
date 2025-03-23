@@ -2,6 +2,7 @@
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
+import { set } from "mongoose";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -21,7 +22,7 @@ const NewArticle = () => {
     image: null,
   });
   const [content, setContent] = useState("");
-  
+  const [token, setToken] = useState("");
   const [user, setUser] = useState<userType | any>(null);
   const refreshAccessToken = async () => {
     try {
@@ -56,6 +57,7 @@ const NewArticle = () => {
           console.warn("No token available");
           return;
         }
+        setToken(tokenTemp);
 
         const response = await fetch(`/api/user/session/token/check`, {
           method: "POST",
@@ -111,6 +113,7 @@ const NewArticle = () => {
       const response = await fetch("/api/post", {
         method: "POST",
         body: data,
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.ok) {

@@ -112,12 +112,15 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ id }) => {
 
           <div className="text-justify w-100">
             {data.Content &&
+              data.Content[0] ?(
               data.Content.map((bab: any, index: any) => (
                 <div className="my-4" key={index}>
                   <h3>{bab.babTitle}</h3>
                   <p id={bab.babTitle} className="text-justify" dangerouslySetInnerHTML={{ __html: bab.babContent }}></p>
                 </div>
-              ))}
+              ))) : (
+                <p id={data.Title} className="text-justify" dangerouslySetInnerHTML={{ __html: data.Content }}></p>
+              )}
           </div>
         </div>
       </div>

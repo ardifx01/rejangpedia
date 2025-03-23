@@ -288,7 +288,7 @@ class Users {
     }
     async checkAdmin(id: string): Promise<boolean> {
         try {
-            const user = await this.#users.findOne({ id: id });
+            const user = await this.#users.findOne({ _id: id });
             return user?.atmin === true;
         } catch (error) {
             console.error("Error checking admin status:", error);

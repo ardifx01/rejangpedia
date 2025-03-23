@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     
   try {
     // Ambil buku berdasarkan userId dengan pagination
-    const posts = await bookInstance.postList(page, limit);
+    const posts = await bookInstance.ongoing(page, limit);
     console.log(posts)
     return NextResponse.json({ posts });
   } catch (error) {

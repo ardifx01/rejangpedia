@@ -8,10 +8,11 @@ const ArticlePage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/post/${id}`)
+    fetch(`/api/post/ongoing/${id}`)
       .then((response) => response.json())
-      .then((data) => {
-        setData(data.data);
+      .then((data1) => {
+        setData(data1.data);
+        console.log(data1)
         setLoading(false);
       })
       .catch((error) => {
@@ -23,8 +24,6 @@ const ArticlePage = () => {
   if (loading) {
     return <p>Loading...</p>;
   }
-
-
 
   return (
     <div className="container">
@@ -96,12 +95,16 @@ const ArticlePage = () => {
           </div>
 
           <div style={{ borderRadius: "24px" }}>
-            {data.Content.map((bab: any, index: any) => (
-              <div className="my-4" key={index}>
-                <h3>{bab.babTitle}</h3>
-                <p id={bab.babTitle} dangerouslySetInnerHTML={{ __html: bab.babContent }}></p>
-              </div>
-            ))}
+          {data.Content &&
+              data.Content[0] ?(
+              data.Content.map((bab: any, index: any) => (
+                <div className="my-4" key={index}>
+                  <h3>{bab.babTitle}</h3>
+                  <p id={bab.babTitle} className="text-justify" dangerouslySetInnerHTML={{ __html: bab.babContent }}></p>
+                </div>
+              ))) : (
+                <p id={data.Title} className="text-justify" dangerouslySetInnerHTML={{ __html: data.Content }}></p>
+              )}
           </div>
         </div>
       </div>
