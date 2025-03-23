@@ -20,67 +20,66 @@ const NewArticle = () => {
     pembuat: "",
     image: null,
   });
-const [user, setUser] = useState<userType | any>(null);
-const [content, setContent] = useState("");
+  const [content, setContent] = useState("");
+  
+  const [user, setUser] = useState<userType | any>(null);
+  const refreshAccessToken = async () => {
+    try {
+      if (sessionStorage.getItem("token")) {
+        return sessionStorage.getItem("token");
+      }
 
+      const response = await fetch("/api/user/refreshToken", {
+        method: "POST",
+        credentials: "include", // Ensure cookies are sent
+      });
 
-    const refreshAccessToken = async () => {
-        try {
-            if (sessionStorage.getItem("token")) {
-                return sessionStorage.getItem("token");
-            }
+      if (!response.ok) {
+        return (window.location.href = "/");
+      }
 
-            const response = await fetch("/api/user/refreshToken", {
-                method: "POST",
-                credentials: "include", // Ensure cookies are sent
-            });
+      const data = await response.json();
+      if (!data.token) return window.location.href = "/";
+      sessionStorage.setItem("token", data.token);
+      return data.token;
+    } catch (error) {
+      console.error("Error refreshing access token:", error);
+      return null;
+    }
+  };
 
-            if (!response.ok) {
-                //return (window.location.href = "/");
-            }
-
-            const data = await response.json();
-            if (!data.token) //return window.location.href = "/";
-            sessionStorage.setItem("token", data.token);
-            return data.token;
-        } catch (error) {
-            console.error("Error refreshing access token:", error);
-            return null;
-        }
-    };
-
-    useEffect(() => {
-        async function fetchUserData() {
-            try {
-                const tokenTemp = await refreshAccessToken();
-                if (!tokenTemp) {
-                    console.warn("No token available");
-                    return;
-                }
-
-                const response = await fetch(`/api/user/session/token/check`, {
-                    method: "POST",
-                    headers: { Authorization: `Bearer ${tokenTemp}` },
-                });
-
-                if (!response.ok) {
-                    //window.location.href = "/user/login";
-                }
-
-                const check = await response.json();
-                setUser(check);
-               
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-                setUser(null);
-            }
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const tokenTemp = await refreshAccessToken();
+        if (!tokenTemp) {
+          console.warn("No token available");
+          return;
         }
 
-        // Only fetch data if user is null
-        if (user === null) {
-            fetchUserData();
+        const response = await fetch(`/api/user/session/token/check`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${tokenTemp}` },
+        });
+
+        if (!response.ok) {
+          window.location.href = "/user/login";
         }
-    }, [user]);
+
+        const check = await response.json();
+        setUser(check);
+
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setUser(null);
+      }
+    }
+
+    // Only fetch data if user is null
+    if (user === null) {
+      fetchUserData();
+    }
+  }, [user]);
   const previewPhoto = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -113,7 +112,7 @@ const [content, setContent] = useState("");
         method: "POST",
         body: data,
       });
-      
+
       if (response.ok) {
         alert("Artikel berhasil dikirim!");
       } else {
@@ -148,7 +147,7 @@ const [content, setContent] = useState("");
           )}
         </div>
         <div className="form-group">
-        <ReactQuill id="content" value={content} onChange={setContent}  />
+          <ReactQuill id="content" value={content} onChange={setContent} />
         </div>
         <button type="submit" className="btn btn-info mt-3 rounded-lg">
           <i className="fa fa-paper-plane" aria-hidden="true"></i> Kirim

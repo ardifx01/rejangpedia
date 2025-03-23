@@ -6,8 +6,72 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 export default function Home() {
   const [data, setData] = useState<Data[] | []>([]);
-  const [searchTerm, setSearchTerm] = useState<string>("")
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<userType | any>(null);
+
+  const refreshAccessToken = async () => {
+    try {
+      if (sessionStorage.getItem("token")) {
+        return sessionStorage.getItem("token");
+      }
+
+      const response = await fetch("/api/user/refreshToken", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        return;
+      }
+
+      const data = await response.json();
+      if (!data.token) sessionStorage.setItem("token", data.token);
+      return data.token;
+    } catch (error) {
+      console.error("Error refreshing access token:", error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const tokenTemp = await refreshAccessToken();
+        if (!tokenTemp) {
+          console.warn("No token available");
+          return;
+        }
+
+        const response = await fetch(`/api/user/session/token/check`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${tokenTemp}` },
+        });
+
+        // Cek jika respons kosong sebelum parsing JSON
+        if (!response.ok) {
+          console.error(`Fetch error: ${response.status}`);
+          return;
+        }
+
+        const text = await response.text(); // Dapatkan teks dari respons
+        if (text) {
+          const check = JSON.parse(text); // Parse hanya jika teks ada
+          setUser(check); // Simpan data user jika ada
+        } else {
+          console.warn("Empty response");
+          setUser(null); // Set user ke null jika respons kosong
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setUser(null); // Handle error dengan fallback user null
+      }
+    }
+
+    if (user === null) {
+      fetchUserData();
+    }
+  }, [user]);
 
   useEffect(() => {
     fetch("/api/post")
@@ -23,224 +87,103 @@ export default function Home() {
   }, []);
 
   function search() {
-    window.location.href = "/search/" + searchTerm
+    window.location.href = "/search/" + searchTerm;
   }
 
   return (
-    <div className="container">
-      <div
-        className="header text-dark text-center mt-2 rounded-bottom"
-        style={{ fontFamily: '"Montserrat" !important' }}
-      >
-        <img
-          id="logo"
-          draggable="false"
-          className="border-0"
-          src="https://cdn.glitch.global/2f9a2460-083a-49a5-a55f-2abb8ce71e54/logo.png?v=1699767799122"
-        />
-        <p>
-          <i className="fa fa-globe" /> Punyo Kito Galo
-        </p>
+    <>
+      <div className="d-flex mt-3 mx-4 gap-3 flex-row-reverse">
+        {user ? (
+          <a href="/post/create" className={`py-2 bd-highlight`}>Tulis Artikel</a>
+        ) : (
+          <a href="/user/login" className="px-4 rounded-pill bd-highlight border btn btn-light">Login</a>
+        )}
+        <a className="py-2 bd-highlight">Kamus Bahasa Rejang</a>
       </div>
-      <div className="search-box d-flex justify-content-center">
-        <input
-          autoComplete="off"
-          type="text"
-          style={{ borderRadius: "6px 4px 4px 6px" }}
-          className="form-control search-input custom-input mr-1"
-          id="searchInput"
-          onKeyUp={(e) => {
-            //@ts-ignore
-            setSearchTerm(e.target.value);  
-            if (e.key === "Enter") {
-              search()
-              return;
-            }
 
-          }}
-          placeholder="Mau Cari Apa Sanak..."
-        />
-        <button
-          type="submit"
-          className="btn btn-primary border-0 mx-2 rounded-0"
-          style={{ borderRadius: "4px 6px 6px 4px !important" }}
-          id="searchButton"
-          onClick={search}
-        >
-          <FontAwesomeIcon icon={faSearch} />
-        </button>
-      </div>
-      <h4>Apo Bae Yang Disiko?</h4>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
+      <div className="container">
+        <div className="h-100 d-flex justify-content-center flex-column">
           <div
-            className="parent row flex-nowrap overflow-auto"
-            style={{ width: "100%", overflowX: "auto" }}
+            className="header text-dark text-center rounded-bottom"
+            style={{ fontFamily: '"Montserrat" !important' }}
           >
-            <div className="col">
-              <h6 className="card-title ml-2">Tengok Galo Artikel</h6>
-              <a
-                className="card m-1 card-img-top"
-                style={{
-                  backgroundImage: `url(${data.length > 0 ? data[0].Image || 'https://images.pexels.com/photos/1563356/pexels-photo-1563356.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500' : 'https://images.pexels.com/photos/1563356/pexels-photo-1563356.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'})`,
-                  backgroundRepeat: "no-repeat",
-                  borderRadius: 24,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  height: 220
-                }}
-                href="/search/a"
-              >
-                <div
-                  className="dark-overlay"
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: 24,
-                    background: "rgba(0, 0, 0, 0.2)"
-                  }}
-                />
-              </a>
-              <a
-                href={`/post/${data[0].id}`}
-                className="btn btn-primary m-1 border-0"
-                style={{
-                  backgroundColor: "#0d7502ff !important",
-                  color: "white !important",
-                  width: "fit-content",
-                  borderRadius: 24,
-                }}
-              >
-                <i
-                  className="fa fa-chevron-right"
-                  aria-hidden="true"
-                  style={{ color: "white !important" }}
-                />
-                Baco {data[0].Title.substring(0, 10)}...
-              </a>
-            </div>
-            <div className="col">
-              <h6 className="card-title ml-2">Kamus Bahasa Rejang</h6>
-              <a
-                className="card m-1 card-img-top"
-                href="https://kamusrejang.glitch.me"
-                style={{
-                  background:
-                    'url("https://cdn.glitch.global/2f9a2460-083a-49a5-a55f-2abb8ce71e54/thumbnails%2Fkamus.jpg?1702886881063")',
-                  color: "white",
-                  borderRadius: 24,
-                  backgroundPosition: "center",
-                  height: 220
-                }}
-              >
-                <div
-                  className="dark-overlay"
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: 24,
-                    background: "rgba(0, 0, 0, 0.2)"
-                  }}
-                />
-              </a>
-              <a
-                href="https://kamusrejang.glitch.me/database"
-                className="btn btn-primary m-1 border-0"
-                style={{
-                  backgroundColor: "#dac26aff !important",
-                  borderRadius: 24,
-                  width: "fit-content",
-                  color: "black !important",
-                }}
-              >
-                <i
-                  className="fa fa-plus"
-                  aria-hidden="true"
-                  style={{ color: "white !important" }}
-                />
-                Tambahkan Kata
-              </a>
-            </div>
-            <div className="col">
-              <h6 className="card-title ml-2">Media Sosial!</h6>
-              <a
-                className="card m-1 card-img-top"
-                href="/chat"
-                style={{
-                  background:
-                    'url("https://img.freepik.com/free-vector/person-addicted-social-media-illustration-concept_52683-32210.jpg")',
-                  color: "white",
-                  borderRadius: 24,
-                  backgroundPosition: "center",
-                  height: 220
-                }}
-              >
-                <div
-                  className="dark-overlay"
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: 24,
-                    background: "rgba(0, 0, 0, 0.2)"
-                  }}
-                />
-              </a>
-            </div>
+            <img id="logo" draggable="false" className="border-0" src="/logo.png" />
           </div>
-          <h4 className="mt-3">Artikel Pilihan</h4>
 
-          <div className="row">
-            {data.map((entry) => (
-              <div className="col" key={entry.id}>
-                <a
-                  className="card"
-                  href={`/post/${entry.id}`}
-                  style={{
-                    background: "rgba(0, 0, 0, 0)",
-                    border: "none",
-                    width: "100%",
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "cover",
-                  }}
-                >
-                  <h6
-                    className="card-title mb-2"
+          <div className="mt-4 mb-4 d-flex justify-content-center position-relative">
+            <FontAwesomeIcon icon={faSearch} className="position-absolute search-icon" />
+            <input
+              autoComplete="off"
+              type="text"
+              className="form-control search-input custom-input shadow-sm mr-1 rounded-pill p-3 px-4 ps-5"
+              id="searchInput"
+              onKeyUp={(e) => {
+                //@ts-ignore
+                setSearchTerm(e.target.value);
+                if (e.key === "Enter") {
+                  search();
+                  return;
+                }
+              }}
+              placeholder="Search"
+            />
+          </div>
+
+          <div className="d-flex justify-content-center gap-3">
+            <button className="btn btn-primary px-4 btn-lg" onClick={search}>Cari Apo</button>
+            <a className={`btn btn-secondary px-3 ${!user ? "disabled" : ""} btn-lg`} href="/post/create">
+              Tulis Artikel
+            </a>
+          </div>
+        </div>
+
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <div>
+            <h4 className="mt-3">Artikel Pilihan</h4>
+
+            <div className="row">
+              {data.map((entry) => (
+                <div className="col mt-2" key={entry.id}>
+                  <a
+                    className="card"
+                    href={`/post/${entry.id}`}
                     style={{
-                      margin: 0,
-                      maxHeight: "1.2em",
-                      overflow: "hidden",
-                      fontFamily: "Arial, Helvetica, sans-serif",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
+                      background: "rgba(0, 0, 0, 0)",
+                      border: "none",
+                      backgroundRepeat: "no-repeat",
+                      backgroundSize: "cover",
                     }}
                   >
-                    {entry.Title}
-                  </h6>
-                  <img
-                    className="card-img-top rounded"
-                    src={
-                      entry.Image ||
-                      "https://e1.pxfuel.com/desktop-wallpaper/908/281/desktop-wallpaper-non-copyrighted-no-copyright.jpg"
-                    }
-                    alt={entry.Title}
-                  />
-                </a>
-              </div>
-            ))}
+                    <h6
+                      className="card-title mb-2"
+                      style={{
+                        margin: 0,
+                        maxHeight: "1.2em",
+                        overflow: "hidden",
+                        fontFamily: "Arial, Helvetica, sans-serif",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {entry.Title}
+                    </h6>
+                    <img
+                      className="listing-image rounded"
+                      src={
+                        entry.Image ||
+                        "https://e1.pxfuel.com/desktop-wallpaper/908/281/desktop-wallpaper-non-copyrighted-no-copyright.jpg"
+                      }
+                      alt={entry.Title}
+                    />
+                  </a>
+                </div>
+              ))}
+            </div>
           </div>
-        </>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }

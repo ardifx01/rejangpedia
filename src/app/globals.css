@@ -1,225 +1,89 @@
-.custom-input {
-  padding: 10px; /* Sesuaikan padding sesuai preferensi Anda */
-  font-size: 16px; /* Sesuaikan ukuran font sesuai preferensi Anda */
-}
-#logo {
-  background-color: rgba(63, 159, 142, 0) !important;
-  height: 10rem;
-  width: 18rem; /* Ensure it's responsive */
-}
-.card-img-top {
-  height: 230px;
-  width: 100%;
-}
-::-webkit-scrollbar {
-  margin-top: 10px !important; /* Set the margin at the top of the scrollbar */
-  width: 12px; /* Set the width of the scrollbar */
-  height: 6px;
-}
-.quill > .ql-toolbar:first-child {
-  display: none !important;
+:root {
+  --text: #121212;
+  --background: #f7fcfe;
+  --primary: #8DC53E;
+  --primary-border: #99e232;
+  --secondary: #11B8DD;
+  --accent: #f7fcfe;
 }
 
-::-webkit-scrollbar-thumb {
-  background-color: #888; /* Set the color of the thumb */
-  border: 2px solid #555; /* Set the border color of the thumb */
-}
-
-::-webkit-scrollbar-track {
-  background-color: #ddd; /* Set the background color of the track */
-}
-::-webkit-scrollbar-track:hover {
-  background-color: #ddd; /* Set the background color of the track */
-  height: 20px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #555; /* Set the color of the thumb on hover */
-}
-
-::-webkit-scrollbar-corner {
-  background-color: #ddd; /* Set the background color of the scrollbar corner */
-}
-
-@media only screen and (max-width: 600px) {
-  #logo {
-    background-color: rgba(63, 159, 142, 0) !important;
-    height: 28vw;
-    width: 60vw; /* Ensure it's responsive */
-  }
-  .card-img-top {
-    height: 130px;
-    width: 230px;
-  }
-  ::-webkit-scrollbar {
-    display: none; /* Safari and Chrome */
-  }
-}
-body {
-  font-family: "Noto Sans";
-}
-.search-box {
-  margin: 20px;
-}
-
-.random-article {
-  margin: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.random-article img {
-  max-width: 100%;
-  height: auto;
-}
-a {
-  color: black;
-}
-
-img {
-  border: 2px solid #7a7a7a !important; /* Tambahkan border abu-abu */
-  object-fit: cover;
-  background-color: #e8eaed !important;
-}
-.btn-primary {
-  background-color: #8dc53eff !important;
-}
-.text-primary,
-strong {
-  color: #dac26aff !important;
-}
-body {
-  background-color: #f7fcfe !important;
-}
-
-body::-webkit-scrollbar {
-  width: 0px;
-}
-
-.bg-light {
-  background-color: rgba(247, 252, 254, 0.6) !important;
-  box-shadow: 0 4px 30px rgba(247, 252, 254, 0.1);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-}
-
-h1,
-a,
-span,
-i,
-button {
-  color: black !important;
-}
-#pilihan {
-  background: #3f9f8dff !important;
-}
-#card-pilihan {
-  background: #0aa2c4ff;
-}
-.btn-outline-light {
-  color: black !important;
-  border: solid black !important;
-}
-.btn-secondary {
-  background-color: #424347 !important;
-  color: #f7fcfe !important;
-}
-.btn-secondary > .fa {
-  color: #e8eaed !important;
-}
-.dibuat {
-  font-size: 18px;
-  color: rgb(75, 73, 73) !important;
-  margin-bottom: 30px;
-  margin-top: 20px;
-}
+/* Mode Gelap */
 @media (prefers-color-scheme: dark) {
-  .dibuat {
-    color: lightgray !important;
-  }
-  input,
-  .bg-ai {
-    background-color: #424347 !important;
-    border: none !important;
-    color: #e8eaed !important;
+  :root {
+    --text: #f7fcfe;                /* Ubah warna teks agar lebih terang */
+    --background: #121212;          /* Background gelap */
+    --primary: #8DC53E;
+    --primary-border: #99e232;
+    --secondary: #11B8DD;
+    --accent: #424347;              /* Aksen gelap */
   }
   ::placeholder {
-    color: #b1b1b1 !important;
+    color: #dfe5e881 !important;
   }
-  .btn-outline-light {
-    color: #e8eaed !important;
-    border: solid #e8eaed !important;
-  }
-  #light {
-    color: lightgray;
-  }
-  .btn-primary {
-    background-color: #0aa2c4ff !important;
-  }
-  body {
-    background-color: #121212 !important; /* Warna biru tua */
-    color: #cccccc !important;
-  }
-  .bg-light {
-    background: rgba(18, 18, 18, 0.6) !important;
-    box-shadow: 0 4px 30px rgba(18, 18, 18, 0.1);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-  }
-  p,
-  h1,
-  h3,
-  i,
-  a,
-  button,
-  span,
-  li {
-    color: #e8eaed !important;
-  }
-  img {
-    background-color: #f7fcfe !important;
-  }
-  #hpDp {
-    color: #e8eaed !important;
-  }
-  #pilihan {
-    background-color: rgb(68, 69, 70) !important;
-  }
-  #card-pilihan {
-    background: #515151 !important;
-  }
-} 
-
-#khususHp {
-  display: none;
 }
-#khususHpBawah {
-  display: none;
-  transition: all 0.3s ease-in-out; /* Animasi smooth */
+
+body, .navbar {
+  background-color: var(--background) !important;
+  color: var(--text) !important;
 }
-@media only screen and (max-width: 600px) {
-  #khususDekstop {
-    display: none;
+a {
+  color: var(--text) !important;
+  text-decoration: none !important;
+}
+.form-control {
+  background-color: var(--accent) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--accent) !important;
+}
+.btn {
+  transition: all 0.5s !important;
+  background-color: var(--accent) !important;
+  font-weight:600;
+  border: 1px solid var(--text) !important;
+}
+.btn:hover {
+  opacity: 80%;
+}
+.btn-primary {
+  background-color: var(--primary) !important;
+  color: #121212 !important;
+  border: 1px solid var(--primary-border) !important; 
+}
+.btn-secondary {
+  background-color: var(--secondary) !important;
+  color: #121212 !important;
+  border: 1px solid var(--secondary-border) !important; 
+}
+@media only screen and (min-width: 600px) {
+  .container {
+    width: 75% !important;
   }
-  #khususHp {
-    display: block;
-  }
-  #khususHpBawah {
-    display: block;
-  }
+}
 
-  #khususHp .nav-link i {
-    font-size: 1.3rem;
-  }
-  #khususHp .nav-link .d-block {
-    font-size: 0.8rem;
-    color: rgb(199, 199, 199);
-  }
+.container, .h-100 {
+  min-height: 60vh !important;
+  padding-bottom: 20px !important;
+}
 
-  #khususHpBawah .nav-link i {
-    font-size: 1.3rem;
-  }
-  #khususHpBawah .nav-link .d-block {
-    font-size: 0.8rem;
-    color: rgb(199, 199, 199);
-  }
+#logo {
+  max-height: 139px !important;
+}
+.listing-image {
+  height: 200px !important;
+  max-width: 100% !important;
+  object-fit: cover;
+}
+.search-icon-navbar {
+  top: 50%; /* Pusatkan secara vertikal */
+  left: 150px; /* Jarak dari sisi kiri */
+  transform: translateY(-50%);
+  color: gray; /* Warna ikon agar terlihat */
+  font-size: 1.2rem;
+}
+.search-icon {
+  top: 50%; /* Pusatkan secara vertikal */
+  left: 18px; /* Jarak dari sisi kiri */
+  transform: translateY(-50%);
+  color: gray; /* Warna ikon agar terlihat */
+  font-size: 1.2rem;
 }
