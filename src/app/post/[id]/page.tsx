@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import ArticlePage from "./Article"; // Import the client component
 
 // 1. Define the async metadata function that fetches article data dynamically based on `params.id`
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const { id } = params; // Retrieve the `id` from the URL
+export async function generateMetadata({params}: {params: Promise<{ id: string }>}): Promise<Metadata> {
+  const { id } = await params; // Retrieve the `id` from the URL
 
   // 2. Fetch the data from the API using the `id`
   const res = await fetch(`https://rejangpedia.vercel.app/api/post/${id}`, { cache: "no-store" });
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
       title: data.Title,
       description: data.Content?.[0]?.babContent.substring(0, 150),
       images: [data.Image || "/logo.png"],
-      url: `https://www.rejangpedia.com/post/${params.id}`,
+      url: `https://www.rejangpedia.com/post/${id}`,
     },
     twitter: {
       card: "summary_large_image",
@@ -40,6 +40,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 }
 
 // 4. Export the main Page component
-export default function Page({ params }: { params: { id: string } }) {
-  return <ArticlePage id={params.id} />; // Render the `ArticlePage` client component with `id`
+export default async function Page({params}: {params: Promise<{ id: string }>}) {
+  const { id } = await params
+  return <ArticlePage id={id} />; // Render the `ArticlePage` client component with `id`
 }
