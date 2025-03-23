@@ -125,31 +125,40 @@ const NewArticle = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h1 className="display-4">Artikel Baru</h1>
+    <div className="container">
+      <h1>Artikel Baru</h1>
       <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <div className="form-group">
+      <div className="form-group mb-2">
+          {preview && (
+            <img src={preview} style={{ height: "250px", objectFit: "contain", background: "rgba(0, 0, 0, 0)", borderRadius: "12px" }} className="img-fluid" alt="Preview" />
+          )}
+        </div>
+        <div className="form-group mb-2">
           <label htmlFor="title">Title:</label>
           <input type="text" id="title" name="title" className="form-control" value={formData.title} onChange={handleChange} />
         </div>
-        <div className="form-group">
+        <div className="form-group mb-2">
           <label htmlFor="link">Link Video (Optional):</label>
           <input type="text" id="link" name="link" className="form-control" value={formData.link} onChange={handleChange} />
         </div>
 
-        <div className="form-group">
+        <div className="form-group mb-2">
           <label htmlFor="image">Cover Image:</label>
-          <input type="file" name="image" id="image" className="form-control-file" required onChange={previewPhoto} />
+          <div className="custom-file-input-wrapper">
+            <input
+              type="file"
+              name="image"
+              id="image"
+              className="shadow-sm rounded border border-secondary p-2 w-100"
+              required
+              onChange={previewPhoto}
+            />
+          </div>
         </div>
-        <div className="form-group">
-          {preview && (
-            <img src={preview} style={{ width: "460px", maxWidth: "100%", border: "2px solid #ccc", objectFit: "cover", borderRadius: "24px" }} className="img-fluid" alt="Preview" />
-          )}
+        <div className="form-group mb-2">
+          <ReactQuill id="content" className="form-control" value={content} onChange={setContent} />
         </div>
-        <div className="form-group">
-          <ReactQuill id="content" value={content} onChange={setContent} />
-        </div>
-        <button type="submit" className="btn btn-info mt-3 rounded-lg">
+        <button type="submit" className="btn btn-primary btn-lg mt-3 rounded-lg">
           <i className="fa fa-paper-plane" aria-hidden="true"></i> Kirim
         </button>
       </form>

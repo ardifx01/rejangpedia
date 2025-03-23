@@ -94,3 +94,142 @@ a {
   color: gray; /* Warna ikon agar terlihat */
   font-size: 1.2rem;
 }
+
+.ql-snow {
+  border: none !important;
+}
+.ql-picker {
+  color: var(--text) !important;
+}
+/* Quill Editor Main Styling */
+.ql-container {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background-color: var(--background);
+  color: var(--text);
+  padding: 10px;
+}
+
+.ql-editor {
+  min-height: 200px;
+  font-size: 16px;
+  line-height: 1.6;
+  border-radius: 8px;
+  padding: 10px;
+  border: none;
+}
+
+/* Toolbar Customization */
+.ql-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 8px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: var(--background) !important;
+}
+
+/* Hover and Active State SVG */
+.ql-toolbar button:hover svg,
+.ql-toolbar button.ql-active svg {
+  fill: var(--primary); /* Change fill on hover or active */
+}
+
+/* Ensure visibility for dark/light mode */
+[data-theme="dark"] .ql-toolbar svg {
+  fill: var(--text);
+}
+
+/* Edge Case: Make sure disabled buttons look muted */
+.ql-toolbar button.ql-disabled svg {
+  fill: rgba(0, 0, 0, 0.3); /* Adjust for light theme */
+}
+
+[data-theme="dark"] .ql-toolbar button.ql-disabled svg {
+  fill: rgba(255, 255, 255, 0.3); /* Adjust for dark theme */
+}
+
+
+.ql-toolbar button {
+  background-color: transparent;
+  border: none;
+  color: var(--text);
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.ql-toolbar button:hover,
+.ql-toolbar button.ql-active {
+  background-color: var(--hover-bg);
+  color: var(--primary);
+}
+
+/* Dropdown Picker Styles */
+.ql-picker {
+  color: var(--text);
+}
+
+.ql-picker-label {
+  border-radius: 6px;
+  transition: background 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.ql-picker-label:hover {
+  background-color: var(--hover-bg);
+  color: var(--primary);
+}
+
+.ql-picker-options {
+  border-radius: 8px;
+  background-color: var(--background) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ql-picker-item:hover {
+  color: var(--primary);
+}
+
+
+.ql-editor a {
+  color: var(--secondary);
+  text-decoration: underline;
+}
+
+.ql-editor blockquote {
+  border-left: 4px solid var(--primary);
+  padding-left: 12px;
+  margin: 12px 0;
+  color: var(--text);
+  background-color: var(--hover-bg);
+  border-radius: 6px;
+}
+
+.ql-editor ul,
+.ql-editor ol {
+  margin-left: 24px;
+}
+
+.ql-editor img {
+  max-width: 100%;
+  border-radius: 6px;
+}
+
+/* Scrollbar Styling */
+.ql-container.ql-snow {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--background);
+}
+
+.ql-container.ql-snow::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ql-container.ql-snow::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 4px;
+}
+
+.ql-container.ql-snow::-webkit-scrollbar-track {
+  background-color: var(--background);
+}
