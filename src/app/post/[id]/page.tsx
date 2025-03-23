@@ -1,48 +1,85 @@
-import { Metadata } from "next";
-//@ts-ignore
-import ArticlePage from "./ArticlePage"; // Import client component
+"use client";
+import React, { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import styles from './page.module.css';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencil, faShare } from "@fortawesome/free-solid-svg-icons";
+import LoadingSpinner from "@/components/Loading";
 
-type PageProps = {
-  params: {
-    id: string;
-  };
-};
+const ArticlePage = () => {
+  const { id } = useParams();
+  const [data, setData] = useState<any>({});
+  const [loading, setLoading] = useState(true);
 
-// Corrected function without `await` on `params`
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { id } = params; // Direct destructuring
-  const res = await fetch(`https://rejangpedia.vercel.app/api/post/${id}`, { cache: "no-store" });
-  const json = await res.json();
-  const data = json.data;
+  useEffect(() => {
+    fetch(`/api/post/${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setData(data.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      });
+  }, [id]);
 
-  if (!data) {
-    return {
-      title: "Artikel Tidak Ditemukan - Rejangpedia",
-      description: "Maaf, artikel yang Anda cari tidak ditemukan.",
-    };
+  if (loading) {
+    return <LoadingSpinner />;
   }
 
-  return {
-    title: data.Title || "Artikel Menarik - Rejangpedia",
-    description: data.Content?.[0]?.babContent
-      ? data.Content[0].babContent.substring(0, 150) + "..."
-      : "Baca artikel menarik tentang budaya dan sejarah di Rejangpedia.",
-    openGraph: {
-      title: data.Title,
-      description: data.Content?.[0]?.babContent.substring(0, 150),
-      images: [data.Image || "/default-image.jpg"],
-      url: `https://www.rejangpedia.com/post/${params.id}`,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: data.Title,
-      description: data.Content?.[0]?.babContent.substring(0, 150),
-      images: [data.Image || "/default-image.jpg"],
-    },
-  };
-}
+  return (
+    <div className={`container d-flex justify-content-center`}>
+      <div className={styles.container}>
+        <div className="w-100 d-flex flex-column">
+          <h3 className="my-0" style={{ color: "var(--primary)", fontWeight: "bolder" }}>
+            {data.Edit && data.Edit !== "tidak ada waktu" ? `${data.Edit}` : "07 Maret 2023"}
+          </h3>
+          <h1 id="title">{data.Title}</h1>
 
-// Correctly typed Page function with `params`
-export default function Page({ params }: PageProps) {
-  return <ArticlePage id={params.id} />; // Pass `id` correctly
-}
+          <p className="dibuat mr-auto" style={{ fontSize: "15px", maxWidth: "100%", paddingLeft: "10px", borderLeft: "3px solid #424347" }}>
+            <span style={{ color: "var(--primary)" }}>Ditulis oleh</span> {data.Pembuat} {data.Waktu ? ` pada ${data.Waktu}` : " pada 07-Maret-2023"}
+            {data.Diedit && (
+              <>
+                <br />
+                <span style={{ color: "var(--secondary)" }}>Diedit oleh</span> {data.Diedit}
+              </>
+            )}
+          </p>
+
+          <div className="d-flex flex-column flex-md-row gap-3">
+            {data.Image && (
+              <img className="mr-2 cover" style={{ height: "250px", objectFit: "contain", background: "rgba(0, 0, 0, 0)", borderRadius: "12px" }} src={data.Image} alt={data.Title} />
+            )}
+
+            {data.Link && (
+              <article>
+                <iframe style={{ width: "460px", maxWidth: "100%", height: "250px", objectFit: "cover", borderRadius: "12px" }} className="img-fluid" src={data.Link} title={data.Title}></iframe>
+              </article>
+            )}
+          </div>
+
+          <div className="d-flex mt-3 gap-2">
+            <button className="btn btn-primary rounded-pill mr-1 px-3" onClick={() => alert("Share functionality here!")}>
+              <FontAwesomeIcon icon={faShare} />
+            </button>
+            <a className="btn btn-secondary rounded-pill px-3" href={`/edit/${data.id}`}>
+              <FontAwesomeIcon icon={faPencil} /> Edit Article
+            </a>
+          </div>
+
+          <div className="text-justify w-100">
+            {data.Content.map((bab: any, index: any) => (
+              <div className="my-4" key={index}>
+                <h3>{bab.babTitle}</h3>
+                <p id={bab.babTitle} className="text-justify" dangerouslySetInnerHTML={{ __html: bab.babContent }}></p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ArticlePage;
