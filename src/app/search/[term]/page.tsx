@@ -3,31 +3,60 @@ import PostShortcut from "@/components/PostShortcut";
 import { useEffect, useState } from "react";
 import { useParams } from 'next/navigation';
 import { useInView } from "react-intersection-observer";
+import { marked } from "marked";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRobot } from "@fortawesome/free-solid-svg-icons";
+
+interface Data {
+    _id: string;
+    title: string;
+    content: string;
+}
 
 export default function Homepage() {
     const [posts, setPosts] = useState<Data[]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
-    const [loading, setLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [hasMore, setHasMore] = useState<boolean>(true);
+    const [messages, setMessages] = useState<string>("");
+    const [showFullMessage, setShowFullMessage] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
     const { ref, inView } = useInView();
     const params = useParams();
-    const searchTerm = params.term;
+    const searchTerm: string | any = params.term;
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const apiurl = `/api/ai?prompt=${encodeURIComponent(searchTerm || "")}`;
+                const response = await fetch(apiurl);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+                const data = await response.json();
+                const newMessages = data.answer;
+                setMessages(newMessages);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        if (searchTerm) fetchData();
+    }, [searchTerm]);
 
     async function fetchPosts(page: number) {
-        if (loading || !hasMore) return; // Mencegah fetch berulang
-        setLoading(true); // Tandai sedang loading
+        if (loading || !hasMore) return;
+        setLoading(true);
 
         try {
             console.log(`Fetching page ${page} for searchTerm: ${searchTerm}`);
             const response = await fetch(`/api/post/search/${searchTerm}?page=${page}`);
-
             if (!response.ok) throw new Error("Error fetching posts");
 
             const data = await response.json();
-
             if (data.data.length > 0) {
                 setPosts((prev) => (page === 1 ? data.data : [...prev, ...data.data]));
-                setCurrentPage(page); // Update currentPage setelah sukses fetch
+                setCurrentPage(page);
             } else {
                 console.log("No more posts available");
                 setHasMore(false);
@@ -39,28 +68,51 @@ export default function Homepage() {
         }
     }
 
-    // Fetch pertama saat komponen dipasang
     useEffect(() => {
-        setPosts([]); // Reset posts saat searchTerm berubah
+        setPosts([]);
         setCurrentPage(1);
         setHasMore(true);
-        fetchPosts(1);
+        if (searchTerm) fetchPosts(1);
     }, [searchTerm]);
 
-    // Infinite scroll trigger
     useEffect(() => {
         if (inView && hasMore && !loading) {
             fetchPosts(currentPage + 1);
         }
-    }, [inView]); // Memastikan efek ini dijalankan saat `inView` berubah
+    }, [inView]);
+
+    const truncateMarkdown = (markdown: string, limit: number): string => {
+        //@ts-ignore
+        const plainText = marked.parse(markdown).replace(/<[^>]*>/g, ""); // Menghapus tag HTML
+        return plainText.length > limit ? plainText.substring(0, limit) + "..." : plainText;
+    };
 
     return (
         <div className="container">
             <div className='px-3 py-3'>
+                <h3><FontAwesomeIcon icon={faRobot} /> Ai Overview</h3>
+                <div className="mb-4 d-block d-md-flex">
+                    <div>
+                        <p
+                            dangerouslySetInnerHTML={{
+                                __html: marked.parse(showFullMessage ? messages : truncateMarkdown(messages, 350)) || "Sedang Berpikir...",
+                            }}
+                        />
+                        {messages && (
+                            <button
+                                className="btn btn-primary"
+                                onClick={() => setShowFullMessage((prev) => !prev)}
+                            >
+                                {showFullMessage ? "Sembunyikan" : "Baca Rangkuman"}
+                            </button>
+                        )}
+                    </div>
+                </div>
+
                 {posts.length > 0 ? (
                     <div>
-                        {posts.map((post, index) => (
-                            <div key={post._id || index}>
+                        {posts.map((post) => (
+                            <div key={post._id}>
                                 <PostShortcut post={post} />
                             </div>
                         ))}
@@ -69,7 +121,7 @@ export default function Homepage() {
                     !loading && <p>No posts to display.</p>
                 )}
             </div>
-            {hasMore && <div ref={ref} style={{ height: "10px", background: "transparent" }} />} 
+            {hasMore && <div ref={ref} style={{ height: "10px", background: "transparent" }} />}
         </div>
     );
 }
