@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import 'bootstrap/dist/css/bootstrap.css';
+import '@fortawesome/fontawesome-svg-core/styles.css';
 
 import "./globals.css";
 

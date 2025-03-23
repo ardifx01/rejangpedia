@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
 :root {
   --text: #121212;
   --background: #f7fcfe;
@@ -25,8 +27,14 @@ img {
   max-width: 100%;
   border-radius: 12px !important;
 }
+h1, h2, h3 {
+  font-family: "Averia Serif Libre", serif !important;
+}
 body {
   text-align: justify !important;
+}
+.bd-highlight {
+  font-weight: bold !important;
 }
 body, .navbar {
   background-color: var(--background) !important;
@@ -44,7 +52,7 @@ a {
 .btn {
   transition: all 0.5s !important;
   background-color: var(--accent) !important;
-  font-weight:600;
+  font-weight: bold !important;
   border: 1px solid var(--text) !important;
 }
 .btn:hover {
@@ -85,7 +93,7 @@ a {
 }
 .search-icon-navbar {
   top: 50%; /* Pusatkan secara vertikal */
-  left: 150px; /* Jarak dari sisi kiri */
+  left: 140px; /* Jarak dari sisi kiri */
   transform: translateY(-50%);
   color: gray; /* Warna ikon agar terlihat */
   font-size: 1.2rem;

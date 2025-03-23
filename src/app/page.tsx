@@ -104,7 +104,6 @@ export default function Home() {
         <div className="h-100 d-flex justify-content-center flex-column">
           <div
             className="header text-dark text-center rounded-bottom"
-            style={{ fontFamily: '"Montserrat" !important' }}
           >
             <img id="logo" draggable="false" className="border-0" src="/logo.png" />
           </div>

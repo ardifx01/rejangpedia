@@ -46,9 +46,9 @@ const Navbar = () => {
     <>
       {/* Navbar Dekstop */}
       <nav className="navbar navbar-expand-lg sticky-top w-100" id="khususDekstop">
-        <Link className="navbar-brand ps-3" href="/">
-          rejangpedia
-        </Link>
+      <a className="navbar-brand ps-3" href="/">
+        <img src="/logo.png" width="100" height="45" alt="" />
+      </a>
         <form className="form-inline w-100 pe-3 d-none d-lg-block">
           <div>
           <FontAwesomeIcon icon={faSearch} className="position-absolute search-icon-navbar" />
