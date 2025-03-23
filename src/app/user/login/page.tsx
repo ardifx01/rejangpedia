@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 export default function LoginForm() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -16,9 +17,7 @@ export default function LoginForm() {
 
         const response = await fetch("/api/user/session/login", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password }),
             credentials: 'include',
         });
@@ -30,40 +29,43 @@ export default function LoginForm() {
                 router.push("/");
             }
         } else {
-            if (response.status === 401) {
-                setErrorMessage("Invalid username or password. Please try again.");
-            } else {
-                setErrorMessage("Server error. Please try again later.");
-            }
+            setErrorMessage(
+                response.status === 401 
+                    ? "Invalid username or password. Please try again." 
+                    : "Server error. Please try again later."
+            );
         }
     };
 
+    // Keep track of whether the access token has been verified
+    const [isTokenVerified, setIsTokenVerified] = useState(false);
+
     const refreshAccessToken = async () => {
-        if(sessionStorage.getItem("token")) {
-          return window.location.href = "/";  
+        const token = sessionStorage.getItem("token");
+        if (token) {
+            router.push("/"); // Redirect without interrupting the render process
+            return;
         }
 
         const response = await fetch("/api/user/session/token/refresh", {
-          method: "POST",
-          credentials: "include", // Ensure cookies are sent
-        });   
+            method: "POST",
+            credentials: "include",
+        });
 
-        if (!response.ok) {
-          return;
+        if (response.ok) {
+            const data = await response.json();
+            if (data.token) sessionStorage.setItem("token", data.token);
         }
+        setIsTokenVerified(true); // Allow rendering after token verification
+    };
 
-        const data = await response.json();
-        if (!data.token) return;
-        sessionStorage.setItem("token", data.token);
-        return window.location.href = "/"; 
-      }
-    
     useEffect(() => {
-      async function callToken() {
-        await refreshAccessToken();
-      }
-      callToken();
-    }, [])  
+        refreshAccessToken();
+    }, []);
+
+    if (!isTokenVerified) {
+        return null; // Render nothing until the token is verified
+    }
 
     return (
         <div className='container'>
