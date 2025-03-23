@@ -1,14 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import styles from './page.module.css';
+import styles from "./page.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faShare } from "@fortawesome/free-solid-svg-icons";
 import LoadingSpinner from "@/components/Loading";
 
-const ArticlePage = () => {
-  const { id } = useParams();
+const ArticlePage = ({ id }: { id: string }) => {
   const [data, setData] = useState<any>({});
   const [loading, setLoading] = useState(true);
 
@@ -78,12 +76,16 @@ const ArticlePage = () => {
           </div>
 
           <div className="text-justify w-100">
-            {data.Content.map((bab: any, index: number) => (
-              <div className="my-4" key={index}>
-                <h3>{bab.babTitle}</h3>
-                <p dangerouslySetInnerHTML={{ __html: bab.babContent }}></p>
-              </div>
-            ))}
+            {data.Content && data.Content.length > 0 ? (
+              data.Content.map((bab: any, index: number) => (
+                <div className="my-4" key={index}>
+                  <h3>{bab.babTitle}</h3>
+                  <p dangerouslySetInnerHTML={{ __html: bab.babContent }}></p>
+                </div>
+              ))
+            ) : (
+              <p>Artikel ini belum memiliki konten yang tersedia.</p>
+            )}
           </div>
         </div>
       </div>
