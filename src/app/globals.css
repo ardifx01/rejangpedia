@@ -21,7 +21,13 @@
     color: #dfe5e881 !important;
   }
 }
-
+img {
+  max-width: 100%;
+  border-radius: 12px !important;
+}
+body {
+  text-align: justify !important;
+}
 body, .navbar {
   background-color: var(--background) !important;
   color: var(--text) !important;
@@ -61,6 +67,7 @@ a {
 }
 
 .container, .h-100 {
+  padding-top: 20px !important;
   min-height: 60vh !important;
   padding-bottom: 20px !important;
 }

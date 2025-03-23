@@ -1,6 +1,9 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import styles from './page.module.css';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencil, faShare } from "@fortawesome/free-solid-svg-icons";
 
 const ArticlePage = () => {
   const { id } = useParams();
@@ -24,82 +27,51 @@ const ArticlePage = () => {
     return <p>Loading...</p>;
   }
 
-
-
   return (
-    <div className="container">
-      <div className="col-lg-10 col-md-9">
-        <div className="main-content">
+    <div className={`container d-flex justify-content-center`}>
+      <div className={styles.container}>
+        <div className="w-100 d-flex flex-column">
+          <h3 className="my-0" style={{ color: "var(--primary)", fontWeight: "bolder" }}>
+            {data.Edit && data.Edit !== "tidak ada waktu" ? `${data.Edit}` : "07 Maret 2023"}
+          </h3>
           <h1 id="title">{data.Title}</h1>
-          <p
-            className="dibuat mr-auto"
-            style={{
-              fontSize: "15px",
-              maxWidth: "100%",
-              paddingLeft: "10px",
-              borderLeft: "3px solid #138496",
-            }}
-          >
-            <strong style={{ color: "#138496" }}>Ditulis oleh</strong> {data.Pembuat}
-            {data.Waktu ? ` • ${data.Waktu}` : " • 07-Maret-2023"}
+
+          <p className="dibuat mr-auto" style={{ fontSize: "15px", maxWidth: "100%", paddingLeft: "10px", borderLeft: "3px solid var(--accent)" }}>
+            <span style={{ color: "var(--primary)" }}>Ditulis oleh</span> {data.Pembuat} {data.Waktu ? ` pada ${data.Waktu}` : " pada 07-Maret-2023"}
             {data.Diedit && (
               <>
-                <br /><br id="x" />
-                <strong style={{ color: "#138496" }}>Diedit oleh</strong> {data.Diedit}
-                {data.Edit ? ` • ${data.Edit}` : " • 07-Maret-2023"}
+                <br />
+                <span style={{ color: "var(--secondary)" }}>Diedit oleh</span> {data.Diedit}
               </>
             )}
           </p>
 
-          <div className="d-flex flex-column flex-md-row">
+          <div className="d-flex flex-column flex-md-row gap-3">
             {data.Image && (
-              <img
-                className="listing-image mr-2"
-                style={{
-                  height: "250px",
-                  border: "1px solid #ccc",
-                  objectFit: "contain",
-                  background: "rgba(0, 0, 0, 0)",
-                  borderRadius: "12px",
-                }}
-                src={data.Image}
-                alt={data.Title}
-              />
+              <img className="mr-2 cover" style={{ height: "250px", objectFit: "contain", background: "rgba(0, 0, 0, 0)", borderRadius: "12px" }} src={data.Image} alt={data.Title} />
             )}
 
             {data.Link && (
               <article>
-                <iframe
-                  style={{
-                    width: "460px",
-                    maxWidth: "100%",
-                    height: "250px",
-                    objectFit: "cover",
-                    borderRadius: "12px",
-                    border: "1px solid #ccc",
-                  }}
-                  className="img-fluid"
-                  src={data.Link}
-                  title={data.Title}
-                ></iframe>
+                <iframe style={{ width: "460px", maxWidth: "100%", height: "250px", objectFit: "cover", borderRadius: "12px" }} className="img-fluid" src={data.Link} title={data.Title}></iframe>
               </article>
             )}
           </div>
 
-          <div className="d-flex mt-3">
-            <button className="btn btn-info rounded-pill mr-1 text-white" onClick={() => alert("Share functionality here!")}> 
-              <i className="fa fa-share text-white" aria-hidden="true"></i> Bagikan
+          <div className="d-flex mt-3 gap-2">
+            <button className="btn btn-primary rounded-pill mr-1 px-3" onClick={() => alert("Share functionality here!")}>
+              <FontAwesomeIcon icon={faShare} />
             </button>
-            <a className="btn btn-secondary rounded-pill" href={`/edit/${data.id}`}>
-              <i className="fa fa-pencil" aria-hidden="true"></i> Edit Artikel
+            <a className="btn btn-secondary rounded-pill px-3" href={`/edit/${data.id}`}>
+              <FontAwesomeIcon icon={faPencil} /> Edit Article
             </a>
           </div>
 
-          <div style={{ borderRadius: "24px" }}>
+          <div className="text-justify w-100">
             {data.Content.map((bab: any, index: any) => (
               <div className="my-4" key={index}>
                 <h3>{bab.babTitle}</h3>
-                <p id={bab.babTitle} dangerouslySetInnerHTML={{ __html: bab.babContent }}></p>
+                <p id={bab.babTitle} className="text-justify" dangerouslySetInnerHTML={{ __html: bab.babContent }}></p>
               </div>
             ))}
           </div>
