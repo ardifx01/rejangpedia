@@ -6,7 +6,7 @@ import { faPencil, faShare } from "@fortawesome/free-solid-svg-icons";
 import LoadingSpinner from "@/components/Loading";
 
 interface ArticlePageProps {
-  id: string; // Receive `id` as props from the parent
+  id: any; // Receive `id` as props from the parent
 }
 
 const ArticlePage: React.FC<ArticlePageProps> = ({ id }) => {
