@@ -23,7 +23,7 @@ export const metadata = {
   openGraph: {
     title: "Rejangpedia - Punyo Kito Galo",
     type: "website",
-    url: "https://www.rejangpedia.com", // Update if this changes
+    url: "https://rejangpedia.vercel.app", // Update if this changes
     description: "Ensiklopedia digital budaya Rejang. Jelajahi sejarah, bahasa, dan warisan budaya Rejang di Rejangpedia!",
     images: [
       {
