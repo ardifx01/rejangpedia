@@ -1,85 +1,45 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import styles from './page.module.css';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil, faShare } from "@fortawesome/free-solid-svg-icons";
-import LoadingSpinner from "@/components/Loading";
+import { Metadata } from "next";
+import ArticlePage from "./Article"; // Import the client component
 
-const ArticlePage = () => {
-  const { id } = useParams();
-  const [data, setData] = useState<any>({});
-  const [loading, setLoading] = useState(true);
+// 1. Define the async metadata function that fetches article data dynamically based on `params.id`
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const { id } = params; // Retrieve the `id` from the URL
 
-  useEffect(() => {
-    fetch(`/api/post/${id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setData(data.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      });
-  }, [id]);
+  // 2. Fetch the data from the API using the `id`
+  const res = await fetch(`https://rejangpedia.vercel.app/api/post/${id}`, { cache: "no-store" });
+  const json = await res.json();
+  const data = json.data;
 
-  if (loading) {
-    return <LoadingSpinner />;
+  // Handle the case if no data is found for the given `id`
+  if (!data) {
+    return {
+      title: "Artikel Tidak Ditemukan - Rejangpedia",
+      description: "Maaf, artikel yang Anda cari tidak ditemukan.",
+    };
   }
 
-  return (
-    <div className={`container d-flex justify-content-center`}>
-      <div className={styles.container}>
-        <div className="w-100 d-flex flex-column">
-          <h3 className="my-0" style={{ color: "var(--primary)", fontWeight: "bolder" }}>
-            {data.Edit && data.Edit !== "tidak ada waktu" ? `${data.Edit}` : "07 Maret 2023"}
-          </h3>
-          <h1 id="title">{data.Title}</h1>
+  // 3. Generate dynamic metadata, including the `title`, `description`, and `twitter` image
+  return {
+    title: data.Title || "Artikel Menarik - Rejangpedia",
+    description: data.Content?.[0]?.babContent
+      ? data.Content[0].babContent.substring(0, 150) + "..."
+      : "Baca artikel menarik tentang budaya dan sejarah di Rejangpedia.",
+    openGraph: {
+      title: data.Title,
+      description: data.Content?.[0]?.babContent.substring(0, 150),
+      images: [data.Image || "/logo.png"],
+      url: `https://www.rejangpedia.com/post/${params.id}`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: data.Title,
+      description: data.Content?.[0]?.babContent.substring(0, 150),
+      images: [data.Image || "/logo.png"], // Twitter image
+    },
+  };
+}
 
-          <p className="dibuat mr-auto" style={{ fontSize: "15px", maxWidth: "100%", paddingLeft: "10px", borderLeft: "3px solid #424347" }}>
-            <span style={{ color: "var(--primary)" }}>Ditulis oleh</span> {data.Pembuat} {data.Waktu ? ` pada ${data.Waktu}` : " pada 07-Maret-2023"}
-            {data.Diedit && (
-              <>
-                <br />
-                <span style={{ color: "var(--secondary)" }}>Diedit oleh</span> {data.Diedit}
-              </>
-            )}
-          </p>
-
-          <div className="d-flex flex-column flex-md-row gap-3">
-            {data.Image && (
-              <img className="mr-2 cover" style={{ height: "250px", objectFit: "contain", background: "rgba(0, 0, 0, 0)", borderRadius: "12px" }} src={data.Image} alt={data.Title} />
-            )}
-
-            {data.Link && (
-              <article>
-                <iframe style={{ width: "460px", maxWidth: "100%", height: "250px", objectFit: "cover", borderRadius: "12px" }} className="img-fluid" src={data.Link} title={data.Title}></iframe>
-              </article>
-            )}
-          </div>
-
-          <div className="d-flex mt-3 gap-2">
-            <button className="btn btn-primary rounded-pill mr-1 px-3" onClick={() => alert("Share functionality here!")}>
-              <FontAwesomeIcon icon={faShare} />
-            </button>
-            <a className="btn btn-secondary rounded-pill px-3" href={`/edit/${data.id}`}>
-              <FontAwesomeIcon icon={faPencil} /> Edit Article
-            </a>
-          </div>
-
-          <div className="text-justify w-100">
-            {data.Content.map((bab: any, index: any) => (
-              <div className="my-4" key={index}>
-                <h3>{bab.babTitle}</h3>
-                <p id={bab.babTitle} className="text-justify" dangerouslySetInnerHTML={{ __html: bab.babContent }}></p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default ArticlePage;
+// 4. Export the main Page component
+export default function Page({ params }: { params: { id: string } }) {
+  return <ArticlePage id={params.id} />; // Render the `ArticlePage` client component with `id`
+}
