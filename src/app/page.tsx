@@ -97,7 +97,7 @@ export default function Home() {
         ) : (
           <a href="/user/login" className="px-4 rounded-pill bd-highlight border btn btn-light">Login</a>
         )}
-        <a className="py-2 bd-highlight">Kamus Bahasa Rejang</a>
+        <a href="https://kamusrejangkito.glitch.me" className="py-2 bd-highlight">Kamus Bahasa Rejang</a>
       </div>
 
       <div className="container">
