@@ -8,6 +8,7 @@
   --primary-border: #99e232;
   --secondary: #11B8DD;
   --accent: #f7fcfe;
+  --error: ##FF6961;
 }
 
 /* Mode Gelap */
@@ -20,6 +21,7 @@
     --primary-border: #99e232;
     --secondary: #11B8DD;
     --accent: #424347;              /* Aksen gelap */
+    --error: ##FF6961;
   }
   ::placeholder {
     color: #dfe5e881 !important;
@@ -71,6 +73,11 @@ a {
   background-color: var(--primary) !important;
   color: #121212 !important;
   border: 1px solid var(--primary-border) !important; 
+}
+.btn-danger {
+  background-color: var(--error) !important;
+  color: #121212 !important;
+  border: 1px solid var(--error) !important; 
 }
 .btn-secondary {
   background-color: var(--secondary) !important;
