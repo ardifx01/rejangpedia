@@ -50,6 +50,9 @@ a {
 .text-mute {
   color: var(--muted) !important;
 }
+.text-primar {
+  color: var(--primary) !important;
+}
 .form-control {
   background-color: var(--accent) !important;
   color: var(--text) !important;
