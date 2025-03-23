@@ -1,7 +1,7 @@
 const RulesPage = () => {
   return (
     <div>
-      <div className="container mx-auto mt-5 p-5">
+      <div className="container">
         <h1 className="text-4xl font-bold mb-4">Peraturan dan Privasi Rejang Pedia</h1>
         
         <h3 className="text-2xl font-semibold mt-4">1. Pedoman Konten</h3>

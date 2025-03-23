@@ -129,6 +129,7 @@ const EditArticle = () => {
   return (
     <div className="container">
       <h1>Edit Artikel</h1>
+      <p>Jangan lupa membaca <a href="/rules" className="link">Peraturan</a></p>
       <form onSubmit={handleSubmit} encType="multipart/form-data">
         <div className="form-group mb-2">
           {preview && (
