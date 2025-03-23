@@ -45,7 +45,7 @@ export const metadata = {
 
   // Optional - favicon/logo setup
   icons: {
-    icon: "/logo.png",
+    icon: "/logo-icon.png",
   },
 };
 
@@ -57,6 +57,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <head>
+        <link rel="icon" type="image/x-icon" href="/logo-icon.png" />
         <meta name="keywords" content="Rejangpedia, Budaya Rejang, Sejarah Rejang, Ensiklopedia, Bahasa Rejang, Warisan Budaya" />
         <meta name="google-site-verification" content="GcCtsibceSskv7l9WM_5t29jLRwyOsvsoFln7lUP_sk" />
         <meta name="google-adsense-account" content="ca-pub-2998592050723815" />
