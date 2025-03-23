@@ -29,7 +29,28 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ id }) => {
   if (loading) {
     return <LoadingSpinner />;
   }
-
+  async function copyLink() {
+    const currentUrl = `${window.location.href}`
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: data.Title + " rejangpedia",
+                text: "Artikel di rejangpedia, menarik nih",
+                url: currentUrl,
+            });
+        } catch (error) {
+            console.error("Error sharing", error);
+        }
+    } else if (navigator.clipboard) {
+        try {
+            await navigator.clipboard.writeText(currentUrl);
+            alert("Link copied to clipboard. Share it with your friends!");
+        } catch (error) {
+            console.error("Clipboard write error", error);
+            alert("Failed to copy link.");
+        }
+    }
+  }
   return (
     <div className={`container d-flex justify-content-center`}>
       <div className={styles.container}>
@@ -81,7 +102,7 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ id }) => {
           </div>
 
           <div className="d-flex mt-3 gap-2">
-            <button className="btn btn-primary rounded-pill mr-1 px-3" onClick={() => alert("Share functionality here!")}>
+            <button className="btn btn-primary rounded-pill mr-1 px-3" onClick={copyLink}>
               <FontAwesomeIcon icon={faShare} />
             </button>
             <a className="btn btn-secondary rounded-pill px-3" href={`/edit/${data.id}`}>
