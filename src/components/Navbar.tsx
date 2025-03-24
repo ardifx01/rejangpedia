@@ -59,7 +59,7 @@ const Navbar = () => {
                     search();
                   }
                 }}
-                placeholder="Search"
+                placeholder="Cari apa di rejangpedia?"
               />
             </div>
           </form>

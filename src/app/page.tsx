@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import Tooltip from '@mui/material/Tooltip';
+import { Zoom } from "@mui/material";
 
 export default function Home() {
   const [data, setData] = useState<Data[] | []>([]);
@@ -159,9 +161,18 @@ export default function Home() {
             <button className="btn btn-primary px-4 btn-lg" onClick={search}>
               Cari Apo
             </button>
-            <a className={`btn btn-secondary px-3 ${!user ? "disabled" : ""} btn-lg`} href="/post/create">
+
+            <Tooltip title={`${!user && "you need to login"}`} arrow slots={{
+              transition: Zoom,
+            }}>
+            <a
+              data-tooltip-id={!user ? "You need to login" : ""}
+              className={`btn btn-secondary px-3 btn-lg ${!user}`}
+              href={user ? "/post/create" : "/user/login"}
+            >
               Tulis Artikel
             </a>
+            </Tooltip>
           </div>
         </div>
 

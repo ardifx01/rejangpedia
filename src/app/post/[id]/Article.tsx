@@ -4,6 +4,7 @@ import styles from './page.module.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faShare } from "@fortawesome/free-solid-svg-icons";
 import LoadingSpinner from "@/components/Loading";
+import { Tooltip, Zoom } from "@mui/material";
 
 interface ArticlePageProps {
   id: any; // Receive `id` as props from the parent
@@ -32,23 +33,23 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ id }) => {
   async function copyLink() {
     const currentUrl = `${window.location.href}`
     if (navigator.share) {
-        try {
-            await navigator.share({
-                title: data.Title + " rejangpedia",
-                text: "Artikel di rejangpedia, menarik nih",
-                url: currentUrl,
-            });
-        } catch (error) {
-            console.error("Error sharing", error);
-        }
+      try {
+        await navigator.share({
+          title: data.Title + " rejangpedia",
+          text: "Artikel di rejangpedia, menarik nih",
+          url: currentUrl,
+        });
+      } catch (error) {
+        console.error("Error sharing", error);
+      }
     } else if (navigator.clipboard) {
-        try {
-            await navigator.clipboard.writeText(currentUrl);
-            alert("Link copied to clipboard. Share it with your friends!");
-        } catch (error) {
-            console.error("Clipboard write error", error);
-            alert("Failed to copy link.");
-        }
+      try {
+        await navigator.clipboard.writeText(currentUrl);
+        alert("Link copied to clipboard. Share it with your friends!");
+      } catch (error) {
+        console.error("Clipboard write error", error);
+        alert("Failed to copy link.");
+      }
     }
   }
   return (
@@ -105,22 +106,26 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ id }) => {
             <button className="btn btn-primary rounded-pill mr-1 px-3" onClick={copyLink}>
               <FontAwesomeIcon icon={faShare} />
             </button>
-            <a className="btn btn-secondary rounded-pill px-3" href={`/post/edit/${data.id}`}>
-              <FontAwesomeIcon icon={faPencil} /> Edit Article
-            </a>
+            <Tooltip title="You need to login for this feature" arrow slots={{
+              transition: Zoom,
+            }}>
+              <a className="btn btn-secondary rounded-pill px-3" href={`/post/edit/${data.id}`}>
+                <FontAwesomeIcon icon={faPencil} /> Edit Article
+              </a>
+            </Tooltip>
           </div>
 
           <div className="text-justify w-100">
             {data.Content &&
-              data.Content[0] ?(
+              data.Content[0] ? (
               data.Content.map((bab: any, index: any) => (
                 <div className="my-4" key={index}>
                   <h3>{bab.babTitle}</h3>
                   <p id={bab.babTitle} className="text-justify" dangerouslySetInnerHTML={{ __html: bab.babContent }}></p>
                 </div>
               ))) : (
-                <p id={data.Title} className="text-justify" dangerouslySetInnerHTML={{ __html: data.Content }}></p>
-              )}
+              <p id={data.Title} className="text-justify" dangerouslySetInnerHTML={{ __html: data.Content }}></p>
+            )}
           </div>
         </div>
       </div>
