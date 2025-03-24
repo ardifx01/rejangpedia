@@ -27,7 +27,7 @@ export default function SignUpForm() {
             if (response.ok) {
                 const data = await response.json();
                 if (data.message) {
-                    router.push("/"); // Redirect if signup is successful
+                    window.location.href = "/user/login"; // Redirect if signup is successful
                 }
             } else {
                 if (response.status === 409) {
@@ -52,25 +52,7 @@ export default function SignUpForm() {
         const response = await fetch("/api/user/sesion/token/refresh", {
           method: "POST",
           credentials: "include", // Ensure cookies are sent
-        });    const refreshAccessToken = async () => {
-        if(sessionStorage.getItem("token")) {
-          return window.location.href = "/";  
-        }
-
-        const response = await fetch("/api/user/sesion/token/refresh", {
-          method: "POST",
-          credentials: "include", // Ensure cookies are sent
-        });
-
-        if (!response.ok) {
-          return;
-        }
-
-        const data = await response.json();
-        if (!data.token) return;
-        sessionStorage.setItem("token", data.token);
-        return window.location.href = "/"; 
-      }
+        });    
 
         if (!response.ok) {
           return;
