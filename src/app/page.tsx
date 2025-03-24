@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import Tooltip from '@mui/material/Tooltip';
 import { Zoom } from "@mui/material";
+import { LogIn, LogOut } from "lucide-react";
 
 export default function Home() {
   const [data, setData] = useState<Data[] | []>([]);
@@ -116,18 +117,18 @@ export default function Home() {
         {user ? (
           <>
             <button
-              className="px-4 rounded-pill bd-highlight btn btn-light"
+              className="px-3 rounded-pill bd-highlight btn btn-light text-dangr"
               onClick={handleLogout}
             >
-              Logout
+              <LogOut />
             </button>
           </>
         ) : (
-          <a href="/user/login" className="px-4 rounded-pill bd-highlight btn btn-light">
-            Login
+          <a className="pe-3 rounded-pill bd-highlight btn btn-light hover-text-primary">
+            <LogIn />
           </a>
         )}
-        <a href="https://kamusrejang.glitch.me" className="py-2 bd-highlight">
+        <a href="https://kamusrejang.glitch.me" className="py-2 bd-highlight hover-text-danger">
           Kamus Bahasa Rejang
         </a>
       </div>
@@ -162,17 +163,24 @@ export default function Home() {
               Cari Apo
             </button>
 
-            <Tooltip title={`${!user && "you need to login"}`} arrow slots={{
+            <Tooltip title={`${!user ? "you need to login" : "add article"}`} arrow slots={{
               transition: Zoom,
             }}>
               <a
-                data-tooltip-id={!user ? "You need to login" : ""}
                 className={`btn btn-secondary px-3 btn-lg ${!user}`}
                 href={user ? "/post/create" : "/user/login"}
               >
                 Tulis Artikel
               </a>
             </Tooltip>
+          </div>
+          <div className="d-flex justify-content-center gap-2 mt-4">
+            <p>Baca juga: <a href="https://mfathinhalim.github.io" className="text-sec">Tentang Fathin</a></p>
+            
+            <a className="text-sec"
+              href={user ? "/post/create" : "/user/login"}>
+                Peraturan Artikel
+            </a>
           </div>
         </div>
         <h4 className="mt-3">Artikel Pilihan</h4>
@@ -210,10 +218,10 @@ export default function Home() {
           </div>) : (
           <div>
             <div className="row">
-              {data.map((entry) => (
+              {data.map((entry, index) => (
                 <div className="col mt-2" key={entry.id}>
                   <a
-                    className="card"
+                    className={`card ${index % 2 === 0 ? "hover-text-primary" : "hover-text-secondary"}`}
                     href={`/post/${entry.id}`}
                     style={{
                       background: "rgba(0, 0, 0, 0)",

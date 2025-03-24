@@ -40,11 +40,11 @@ const Navbar = () => {
       {/* Navbar Desktop & Mobile */}
       {!pathname.includes("user") && (
 
-        <nav className="navbar navbar-expand-lg sticky-top w-100" id="khususDekstop">
+        <nav className="navbar py-0 sticky-top w-100" id="khususDekstop">
           <div className="container-fluid d-flex align-items-center">
             {/* Logo */}
-            <a className="navbar-brand" href="/">
-              <img src="/logo.png" width="100" height="45" alt="Logo" />
+            <a className="navbar-brand me-3 ms-0" href="/">
+              <img src="/logo-icon.png" width="45" height="45" alt="Logo" />
             </a>
 
             {/* Form Pencarian yang tetap di samping logo */}

@@ -3,8 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import "./globals.css";
 import Script from "next/script"; // Import next/script for AdSense
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { Search } from "lucide-react"
 
 export const metadata = {
   title: "rejangpedia - Punyo Kito Galo",
@@ -68,7 +67,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <a href="/search" className="btn btn-primary floating-button" id="floatingButton">
-          <FontAwesomeIcon icon={faSearch} />
+          <Search />
         </a>
       </body>
       <Script

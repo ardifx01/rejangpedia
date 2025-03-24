@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
 @font-face {
   font-family: 'Bangkahulu';
@@ -14,9 +14,11 @@
   --text: #121212;
   --muted: #12121275;
   --background: #f7fcfe;
-  --primary: #8DC53E;
-  --primary-border: #99e232;
-  --secondary: #11B8DD;
+  --primary: #9fd358;
+  --primary-text: #121212; 
+  --secondary-text: #121212; 
+  --primary-border: #a0da50;
+  --secondary: #43c2de;
   --accent: #f9fbfc;
   --error: #FF6961;
 }
@@ -27,8 +29,10 @@
     --text: #f7fcfe; 
     --muted: #ffffff8b;
     --background: #121212;          /* Background gelap */
-    --primary: #9ac959;
     --primary-border: #b0e467;
+    --primary: #9ac959;
+    --primary-text: #9ac959;
+    --secondary-text: #4bcbe7;
     --secondary: #4bcbe7;
     --accent: #424347;              /* Aksen gelap */
     --error: #fd8982;
@@ -46,7 +50,9 @@ h1, h2, h3 {
   font-family: "Averia Serif Libre", serif !important;
 }
 body {
+  font-family: 'Outfit', Arial, Helvetica, sans-serif !important;
   text-align: justify !important;
+  font-weight: 300 !important;
 }
 .bd-highlight {
   font-weight: bold !important;
@@ -66,7 +72,7 @@ a {
   color: var(--muted) !important;
 }
 .text-primar {
-  color: var(--primary) !important;
+  color: var(--primary-text) !important;
 }
 .form-control {
   background-color: var(--accent) !important;
@@ -78,6 +84,21 @@ a {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1), 
               0 2px 7px rgba(0, 0, 0, 0.08)
   }
+.text-sec {
+  color: var(--secondary-text) !important;
+}
+.text-sec:hover {
+  text-decoration: underline !important;
+}
+.hover-text-primary:hover {
+  color: var(--primary-text) !important;
+}
+.hover-text-secondary:hover {
+  color: var(--secondary-text) !important;
+}
+.hover-text-danger:hover {
+  color: var(--error) !important;
+}
 
 .btn {
   transition: all 0.5s !important;
@@ -86,7 +107,7 @@ a {
   font-weight: bold !important;
 }
 .btn-light {
-  border: none !important;
+  border: none;
 }
 .btn:hover {
   opacity: 80%;

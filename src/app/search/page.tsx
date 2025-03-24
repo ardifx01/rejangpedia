@@ -54,10 +54,10 @@ const PostList = () => {
     return (
         <>
             <div className="d-flex mt-3 mx-4 gap-3 flex-row-reverse">
-                <a href="https://kamusrejang.glitch.me" className="py-2 bd-highlight">
+                <a href="https://kamusrejang.glitch.me" className="py-2 bd-highlight hover-text-danger">
                     Kamus Bahasa Rejang
                 </a>
-                <a href="/" className="py-2 bd-highlight">
+                <a href="/" className="py-2 bd-highlight text-decoration-underline">
                     Homepage
                 </a>
             </div>
