@@ -72,7 +72,6 @@ a {
   background-color: var(--accent) !important;
   color: var(--text) !important;
   border: 1px solid var(--accent) !important;
-  border-radius: 50px;  /* Membuat bentuk pill */
   padding: 12px 20px;   /* Memberi jarak dalam input */
   
   /* Box-shadow stylish dengan blur halus */
