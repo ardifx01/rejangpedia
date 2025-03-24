@@ -19,7 +19,7 @@ const Navbar = () => {
     require("bootstrap/dist/js/bootstrap.js");
   }, []);
 
-  if (pathname === "/") return
+  if (pathname === "/" || pathname === "/search") return
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,33 +38,37 @@ const Navbar = () => {
   return (
     <>
       {/* Navbar Desktop & Mobile */}
-      <nav className="navbar navbar-expand-lg sticky-top w-100" id="khususDekstop">
-        <div className="container-fluid d-flex align-items-center">
-          {/* Logo */}
-          <a className="navbar-brand d-none d-md-block" href="/">
-            <img src="/logo.png" width="100" height="45" alt="Logo" />
-          </a>
+      {!pathname.includes("user") && (
 
-          {/* Form Pencarian yang tetap di samping logo */}
-          <form className="d-flex flex-grow-1">
-            <div className="input-group">
-              <input
-                autoComplete="off"
-                type="text"
-                className="form-control rounded-pill shadow-sm"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyUp={(e) => {
-                  if (e.key === "Enter") {
-                    search();
-                  }
-                }}
-                placeholder="Cari apa di rejangpedia?"
-              />
-            </div>
-          </form>
-        </div>
-      </nav>
+        <nav className="navbar navbar-expand-lg sticky-top w-100" id="khususDekstop">
+          <div className="container-fluid d-flex align-items-center">
+            {/* Logo */}
+            <a className="navbar-brand" href="/">
+              <img src="/logo.png" width="100" height="45" alt="Logo" />
+            </a>
+
+            {/* Form Pencarian yang tetap di samping logo */}
+            <form className="d-none d-md-flex flex-grow-1">
+              <div className="input-group">
+                <input
+                  autoComplete="off"
+                  type="text"
+                  className="form-control py-2 px-3 rounded-pill shadow-sm"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyUp={(e) => {
+                    if (e.key === "Enter") {
+                      search();
+                    }
+                  }}
+                  placeholder="Cari apa di rejangpedia?"
+                />
+              </div>
+            </form>
+          </div>
+        </nav>
+      )}
+
     </>
   );
 };

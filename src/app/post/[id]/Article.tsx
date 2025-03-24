@@ -106,7 +106,7 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ id }) => {
             <button className="btn btn-primary rounded-pill mr-1 px-3" onClick={copyLink}>
               <FontAwesomeIcon icon={faShare} />
             </button>
-            <Tooltip title="You need to login for this feature" arrow slots={{
+            <Tooltip title="You need to login for this" arrow slots={{
               transition: Zoom,
             }}>
               <a className="btn btn-secondary rounded-pill px-3" href={`/post/edit/${data.id}`}>

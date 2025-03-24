@@ -116,7 +116,7 @@ export default function Home() {
         {user ? (
           <>
             <button
-              className="px-4 rounded-pill bd-highlight btn btn-light" 
+              className="px-4 rounded-pill bd-highlight btn btn-light"
               onClick={handleLogout}
             >
               Logout
@@ -143,7 +143,7 @@ export default function Home() {
             <input
               autoComplete="off"
               type="text"
-              className="form-control search-input custom-input shadow-sm mr-1 rounded-pill p-3 px-4 ps-5"
+              className="form-control search-input custom-input mr-1 rounded-pill p-3 px-4 ps-5"
               id="searchInput"
               onKeyUp={(e) => {
                 //@ts-ignore
@@ -165,22 +165,50 @@ export default function Home() {
             <Tooltip title={`${!user && "you need to login"}`} arrow slots={{
               transition: Zoom,
             }}>
-            <a
-              data-tooltip-id={!user ? "You need to login" : ""}
-              className={`btn btn-secondary px-3 btn-lg ${!user}`}
-              href={user ? "/post/create" : "/user/login"}
-            >
-              Tulis Artikel
-            </a>
+              <a
+                data-tooltip-id={!user ? "You need to login" : ""}
+                className={`btn btn-secondary px-3 btn-lg ${!user}`}
+                href={user ? "/post/create" : "/user/login"}
+              >
+                Tulis Artikel
+              </a>
             </Tooltip>
           </div>
         </div>
-
+        <h4 className="mt-3">Artikel Pilihan</h4>
         {loading ? (
-          <p>Loading...</p>
-        ) : (
+          <div className="row">
+            {[...Array(3)].map((_, index) => (
+              <div className="col mt-2" key={index}>
+                <div className="card" style={{
+                  background: "rgba(0, 0, 0, 0)",
+                  border: "none",
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "cover",
+                }}>
+                    <h6
+                    className="mt-2 placeholder-title"
+                    style={{
+                      backgroundColor: "var(--primary)",
+                      height: "1em",
+                      width: "70%",
+                      borderRadius: "4px",
+                    }}
+                  ></h6>
+                  <div
+                      className="listing-image rounded"
+                      style={{
+                      width: "100%",
+                      height: "150px",
+                      backgroundColor: "var(--secondary)", // warna abu-abu
+                      borderRadius: "10px",
+                    }}
+                  ></div>
+                </div>
+              </div>
+            ))}
+          </div>) : (
           <div>
-            <h4 className="mt-3">Artikel Pilihan</h4>
             <div className="row">
               {data.map((entry) => (
                 <div className="col mt-2" key={entry.id}>

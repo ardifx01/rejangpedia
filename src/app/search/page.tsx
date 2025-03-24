@@ -1,10 +1,14 @@
 "use client";
+import PostShortcut from "@/components/PostShortcut";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState, useCallback } from "react";
 
 const PostList = () => {
     const [data, setData] = useState<any[]>([]);
     const [page, setPage] = useState(1); // Current page for infinite scroll
     const [isLoading, setIsLoading] = useState(false); // Loading state
+    const [searchTerm, setSearchTerm] = useState<string>("");
 
     // Infinite Scroll: Fetch more posts on scroll
     const fetchPosts = async (pageNum: number) => {
@@ -33,6 +37,9 @@ const PostList = () => {
         }
     }, [isLoading]);
 
+    function search() {
+        window.location.href = "/search/" + searchTerm;
+    }
 
     useEffect(() => {
         window.addEventListener("scroll", handleScroll);
@@ -45,44 +52,70 @@ const PostList = () => {
     }, [page]);
 
     return (
-        <div className="container">
-            <ul className="list-group pl-2 pr-2">
-                <h1>
-                    <i className="fa fa-spinner" aria-hidden="true"></i> Discover
-                </h1>
+        <>
+            <div className="d-flex mt-3 mx-4 gap-3 flex-row-reverse">
+                <a href="https://kamusrejang.glitch.me" className="py-2 bd-highlight">
+                    Kamus Bahasa Rejang
+                </a>
+                <a href="/" className="py-2 bd-highlight">
+                    Homepage
+                </a>
+            </div>
+            <div className="container">
+                <div className="d-flex justify-content-center flex-column">
+                    <div className="header text-center rounded-bottom">
+                        <a href="/">
+                            <img id="logo" draggable="false" className="border-0" src="/logo.png" />
+                        </a>
+                    </div>
 
-                {data.map((entry: any) => (
-                    <li key={entry.id} className="mb-4 list-unstyled">
-                        <div className="d-flex flex-column flex-md-row gap-3">
-                            {entry.Image && (
-                                <img
-                                    className="me-3"
-                                    style={{
-                                        width: "90px",
-                                        height: "90px",
-                                        objectFit: "cover",
-                                        borderRadius: "12px",
-                                    }}
-                                    src={entry.Image}
-                                    alt={entry.Title}
-                                />
-                            )}
-                            <div className={!entry.Image ? "" : "ml-md-3"}>
-                                <h5 className="mb-0">{entry.Title}</h5>
-                                <p className="text-mute m-0">
-                                    {Array.isArray(entry.Content) && entry.Content[0]
-                                        ? entry.Content[0].babContent.replace(/<[^>]+>/g, "").substring(0, 100)
-                                        : entry.Content.toString().replace(/<[^>]+>/g, "").substring(0, 100)}
-                                    ...
-                                </p>
-                                <p className="mb-1">- By {entry.Pembuat}</p>
-                            </div>
+                    <div className="mt-4 mb-4 d-flex justify-content-center position-relative">
+                        <FontAwesomeIcon icon={faSearch} className="position-absolute search-icon" />
+                        <input
+                            autoComplete="off"
+                            type="text"
+                            className="form-control search-input custom-input mr-1 rounded-pill p-3 px-4 ps-5"
+                            id="searchInput"
+                            onKeyUp={(e) => {
+                                //@ts-ignore
+                                setSearchTerm(e.target.value);
+                                if (e.key === "Enter") {
+                                    search();
+                                    return;
+                                }
+                            }}
+                            placeholder="Search"
+                        />
+                    </div>
+                </div>
+                <ul className="list-group pl-2 pr-2">
+                    <h1 className="mb-3">
+                        <i className="fa fa-spinner" aria-hidden="true"></i> Discover
+                    </h1>
+
+                    {data.map((entry: any) => (
+                        <div key={entry._id}>
+                            <PostShortcut post={entry} />
                         </div>
-                    </li>
-                ))}
-                {isLoading && <p>Loading more posts...</p>}
-            </ul>
-        </div>
+                    ))}
+                    {isLoading &&
+                        [...Array(3)].map((_, index) => (
+                            <div
+                                key={index} // Tambahkan key untuk setiap elemen yang di-loop
+                                className="listing-image rounded my-2"
+                                style={{
+                                    width: "100%",
+                                    height: "150px",
+                                    backgroundColor: `${index % 2 === 0 ? "var(--primary)" : "var(--secondary)"}`, // warna abu-abu
+                                    borderRadius: "10px",
+                                }}
+                            ></div>
+                        ))
+                    }
+                </ul>
+            </div>
+        </>
+
     );
 };
 

@@ -3,87 +3,92 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import styles from './page.module.css';
+import LoadingSpinner from "@/components/Loading";
 
 export default function SignUpForm() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [token, setToken] = useState<string | null>(null); // Token sebagai state
+    const [isLoading, setIsLoading] = useState(true);
+
     const router = useRouter();
 
-    const handleSubmit = async (event: Event | any) => {
-        event.preventDefault();
-        setErrorMessage(""); // Reset error message
+    const refreshAccessToken = async () => {
+        const storedToken = sessionStorage.getItem("token");
+        if (storedToken) {
+            setToken(storedToken);
+            window.location.href = "/"
+        }
 
-        try {
-            const response = await fetch("/api/user/session/signup", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ username, password }),
-            });
+        const response = await fetch("/api/user/session/token/refresh", {
+            method: "POST",
+            credentials: "include",
+        });
 
-            if (response.ok) {
-                const data = await response.json();
-                if (data.message) {
-                    window.location.href = "/user/login"; // Redirect if signup is successful
-                }
-            } else {
-                if (response.status === 409) {
-                    setErrorMessage("Username already exists. Please choose another.");
-                } else if (response.status === 401) {
-                    setErrorMessage("Invalid username or password. Please try again.");
-                } else {
-                    setErrorMessage("Server error. Please try again later.");
-                }
+        if (response.ok) {
+            const data = await response.json();
+            if (data.token) {
+                setToken(data.token); // Set token ke state
+                sessionStorage.setItem("token", data.token);
             }
-        } catch (error) {
-            console.error("Error during signup:", error);
-            setErrorMessage("Network error. Please check your connection and try again.");
+        }
+        setIsLoading(false);
+    };
+
+    useEffect(() => {
+        refreshAccessToken();
+    }, []);
+
+    if (isLoading) {
+        return <LoadingSpinner />;
+    }
+
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+
+        const response = await fetch("/api/user/session/signup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+            credentials: "include",
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.token) {
+                setToken(data.token);
+                sessionStorage.setItem("token", data.token);
+                window.location.href = "/"
+            }
+        } else {
+            setErrorMessage(
+                response.status === 401
+                    ? "Invalid username or password. Please try again."
+                    : "Server error. Please try again later."
+            );
         }
     };
 
-   const refreshAccessToken = async () => {
-        if(sessionStorage.getItem("token")) {
-          return window.location.href = "/";  
-        }
-
-        const response = await fetch("/api/user/sesion/token/refresh", {
-          method: "POST",
-          credentials: "include", // Ensure cookies are sent
-        });    
-
-        if (!response.ok) {
-          return;
-        }
-
-        const data = await response.json();
-        if (!data.token) return;
-        sessionStorage.setItem("token", data.token);
-        return window.location.href = "/"; 
-      }
-    
-    useEffect(() => {
-      async function callToken() {
-        await refreshAccessToken();
-      }
-      callToken();
-    }, [])  
-
     return (
-        <div className='container'>
-            <div className='content'>
-                <div className='space-y-4'>
-                    <h1 className='bookTitle'>Sign Up</h1>
+        <div className='container mt-5'>
+            <div className="content">
+                <div className='mb-4'>
+                    <div className="header text-center rounded-bottom">
+                        <a href="/">
+                            <img id="logo" draggable="false" className="border-0" src="/logo.png" />
+                        </a>
+                    </div>                    
                     {errorMessage && (
                         <div className='alert alert-danger' role='alert'>
                             {errorMessage}
                         </div>
                     )}
                     <form onSubmit={handleSubmit} className='space-y-4'>
-                        <div className='mt-2'>
-                            <label htmlFor='username' className='block font-semibold mb-1 h5'>
+                        <div className='mt-3'>
+                            <label htmlFor='username' className='mb-2 block font-semibold mb-1 h5'>
                                 Username
                             </label>
                             <input
@@ -91,15 +96,15 @@ export default function SignUpForm() {
                                 id='username'
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                className='form-control background-dark text-white border-2 border-secondary rounded p-2'
+                                className='form-control background-dark text-white border-2 px-3 py-3 border-secondary rounded p-2'
                                 placeholder='Enter your username...'
                                 maxLength={16}
                                 required
                             />
                         </div>
 
-                        <div className='mt-2'>
-                            <label htmlFor='password' className='block font-semibold mb-1 h5'>
+                        <div className='mt-3 mb-3 relative'>
+                            <label htmlFor='password' className='mb-2 block font-semibold mb-1 h5'>
                                 Password
                             </label>
                             <div className='flex items-center'>
@@ -108,31 +113,32 @@ export default function SignUpForm() {
                                     id='password'
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className='form-control background-dark text-white border-2 border-secondary rounded p-2 flex-grow'
+                                    className='form-control background-dark text-white border-2 border-secondary rounded px-3 py-3 flex-grow'
                                     placeholder='Enter your password...'
                                     required
                                 />
                                 <button
                                     type='button'
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className='btn-secondary btn mt-2 '
+                                    className='btn btn-info mt-3 '
                                     aria-label='Toggle Password Visibility'
                                 >
                                     Show Password <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
                                 </button>
                             </div>
                         </div>
-                        <h5 className='mt-3'>
-                            Already have an account?{" "}
-                            <a href='/user/login' className='bold text-info text-decoration-underline'>
-                                Log in
-                            </a>
-                        </h5>
-                        <div className='text-end mt-2'>
-                            <button type='submit' className='btn btn-sm btn-secondary rounded-pill px-4 py-1'>
+                        <div className='text-end'>
+                            <button type='submit' className='btn btn-lg btn-secondary w-100 rounded'>
                                 Sign Up
                             </button>
                         </div>
+                        <h5 className='mt-3'>
+                            Have an account?{" "}
+                            <a href='/user/login' className='bold text-info text-decoration-underline'>
+                                Login
+                            </a>
+                        </h5>
+
                     </form>
                 </div>
             </div>

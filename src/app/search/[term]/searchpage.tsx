@@ -89,9 +89,9 @@ export default function SearchPage() {
 
     return (
         <div className="container">
-            <div className='px-3 py-3'>
+            <div className='px-3 pb-3'>
                 <h3><FontAwesomeIcon icon={faRobot} /> Ai Overview</h3>
-                <div className="mb-4 d-block d-md-flex">
+                <div className="d-block d-md-flex">
                     <div>
                         <p
                             dangerouslySetInnerHTML={{
@@ -108,7 +108,7 @@ export default function SearchPage() {
                         )}
                     </div>
                 </div>
-
+                <hr className={`mb-4 ${messages ? "mt-4" : "mt-0"}`}/>
                 {posts.length > 0 ? (
                     <div>
                         {posts.map((post) => (
@@ -118,8 +118,33 @@ export default function SearchPage() {
                         ))}
                     </div>
                 ) : (
-                    !loading && <p>No posts to display.</p>
+                    !loading && [...Array(3)].map((_, index) => (
+                        <div
+                            key={index} // Tambahkan key untuk setiap elemen yang di-loop
+                            className="listing-image rounded my-2"
+                            style={{
+                                width: "100%",
+                                height: "150px",
+                                backgroundColor: `${index % 2 === 0 ? "var(--primary)" : "var(--secondary)"}`, // warna abu-abu
+                                borderRadius: "10px",
+                            }}
+                        ></div>
+                    ))
                 )}
+                {loading &&
+                    [...Array(3)].map((_, index) => (
+                        <div
+                            key={index} // Tambahkan key untuk setiap elemen yang di-loop
+                            className="listing-image rounded my-2"
+                            style={{
+                                width: "100%",
+                                height: "150px",
+                                backgroundColor: `${index % 2 === 0 ? "var(--primary)" : "var(--secondary)"}`, // warna abu-abu
+                                borderRadius: "10px",
+                            }}
+                        ></div>
+                    ))
+                }
             </div>
             {hasMore && <div ref={ref} style={{ height: "10px", background: "transparent" }} />}
         </div>

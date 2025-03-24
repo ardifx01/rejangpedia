@@ -17,7 +17,7 @@
   --primary: #8DC53E;
   --primary-border: #99e232;
   --secondary: #11B8DD;
-  --accent: #f7fcfe;
+  --accent: #f9fbfc;
   --error: #FF6961;
 }
 
@@ -27,11 +27,11 @@
     --text: #f7fcfe; 
     --muted: #ffffff8b;
     --background: #121212;          /* Background gelap */
-    --primary: #8DC53E;
-    --primary-border: #99e232;
-    --secondary: #11B8DD;
+    --primary: #9ac959;
+    --primary-border: #b0e467;
+    --secondary: #4bcbe7;
     --accent: #424347;              /* Aksen gelap */
-    --error: #FF6961;
+    --error: #fd8982;
   }
   ::placeholder {
     color: #dfe5e881 !important;
@@ -56,7 +56,7 @@ body, .navbar {
   color: var(--text) !important;
 }
 button {
-  color: var(--error) !important;
+  color: var(--text) !important;
 }
 a {
   color: var(--text) !important;
@@ -72,7 +72,14 @@ a {
   background-color: var(--accent) !important;
   color: var(--text) !important;
   border: 1px solid var(--accent) !important;
-}
+  border-radius: 50px;  /* Membuat bentuk pill */
+  padding: 12px 20px;   /* Memberi jarak dalam input */
+  
+  /* Box-shadow stylish dengan blur halus */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1), 
+              0 2px 7px rgba(0, 0, 0, 0.08)
+  }
+
 .btn {
   transition: all 0.5s !important;
   background-color: var(--accent) !important;
@@ -114,7 +121,10 @@ a {
 
 #logo {
   max-height: 115px !important;
+  width: auto !important;
+  background: transparent !important;
 }
+
 .link {
   text-decoration: underline !important;
 }
@@ -275,4 +285,27 @@ a {
 
 .ql-container.ql-snow::-webkit-scrollbar-track {
   background-color: var(--background);
+}
+
+.floating-button {
+  display: none !important;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 826px) {
+  .floating-button {
+    display: flex !important; /* Use flexbox */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    position: fixed;
+    bottom: 20px; /* Adjust as needed */
+    right: 20px; /* Adjust as needed */
+    z-index: 1000; /* Ensure it stays on top */
+    border-radius: 100% !important; /* Make it circular */
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    font-size: 30px !important;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  }
 }

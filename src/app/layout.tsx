@@ -3,6 +3,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import "./globals.css";
 import Script from "next/script"; // Import next/script for AdSense
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 export const metadata = {
   title: "rejangpedia - Punyo Kito Galo",
@@ -65,12 +67,15 @@ export default function RootLayout({
       <body>
         <Navbar />
         {children}
+        <a href="/search" className="btn btn-primary floating-button" id="floatingButton">
+          <FontAwesomeIcon icon={faSearch} />
+        </a>
       </body>
       <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2998592050723815"
-          crossOrigin="anonymous"
-        />
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2998592050723815"
+        crossOrigin="anonymous"
+      />
     </html>
   );
 }
