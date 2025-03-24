@@ -107,7 +107,20 @@ a {
   color: #121212 !important;
   border: 1px solid var(--secondary-border) !important; 
 }
+.listing-image {
+  height: 200px !important;
+  width: 900px !important;
+  max-width: 93vw !important;
+  object-fit: cover;
+}
 @media only screen and (min-width: 600px) {
+  .listing-image {
+    width: auto;
+    max-width: 100% !important;
+  }
+  .h-100 {
+    min-height: 60vh !important;
+  }
   .container {
     width: 75% !important;
   }
@@ -115,8 +128,10 @@ a {
 
 .container, .h-100 {
   padding-top: 20px !important;
-  min-height: 60vh !important;
   padding-bottom: 20px !important;
+}
+.container {
+  min-height: 60vh !important;
 }
 
 #logo {
@@ -128,11 +143,7 @@ a {
 .link {
   text-decoration: underline !important;
 }
-.listing-image {
-  height: 200px !important;
-  max-width: 100% !important;
-  object-fit: cover;
-}
+
 .search-icon-navbar {
   top: 50%; /* Pusatkan secara vertikal */
   left: 140px; /* Jarak dari sisi kiri */
