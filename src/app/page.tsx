@@ -124,7 +124,7 @@ export default function Home() {
             </button>
           </>
         ) : (
-          <a className="pe-3 rounded-pill bd-highlight btn btn-light hover-text-primary">
+          <a href='/user/login' className="pe-3 rounded-pill bd-highlight btn btn-light hover-text-primary">
             <LogIn />
           </a>
         )}
