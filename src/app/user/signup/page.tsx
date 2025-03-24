@@ -96,7 +96,7 @@ export default function SignUpForm() {
                                 id='username'
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                className='form-control background-dark text-white border-2 px-3 py-3 border-secondary rounded p-2'
+                                className='form-control background-dark border-2 px-3 py-3 border-secondary rounded p-2'
                                 placeholder='Enter your username...'
                                 maxLength={16}
                                 required
@@ -113,7 +113,7 @@ export default function SignUpForm() {
                                     id='password'
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className='form-control background-dark text-white border-2 border-secondary rounded px-3 py-3 flex-grow'
+                                    className='form-control background-dark border-2 border-secondary rounded px-3 py-3 flex-grow'
                                     placeholder='Enter your password...'
                                     required
                                 />
