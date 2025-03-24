@@ -15,7 +15,7 @@ export default function Home() {
         return sessionStorage.getItem("token");
       }
 
-      const response = await fetch("/api/user/refreshToken", {
+      const response = await fetch("/api/user/session/token/refresh", {
         method: "POST",
         credentials: "include",
       });
@@ -25,7 +25,7 @@ export default function Home() {
       }
 
       const data = await response.json();
-      if (!data.token) sessionStorage.setItem("token", data.token);
+      sessionStorage.setItem("token", data.token);
       return data.token;
     } catch (error) {
       console.error("Error refreshing access token:", error);
@@ -47,23 +47,22 @@ export default function Home() {
           headers: { Authorization: `Bearer ${tokenTemp}` },
         });
 
-        // Cek jika respons kosong sebelum parsing JSON
         if (!response.ok) {
           console.error(`Fetch error: ${response.status}`);
           return;
         }
 
-        const text = await response.text(); // Dapatkan teks dari respons
+        const text = await response.text();
         if (text) {
-          const check = JSON.parse(text); // Parse hanya jika teks ada
-          setUser(check); // Simpan data user jika ada
+          const check = JSON.parse(text);
+          setUser(check);
         } else {
           console.warn("Empty response");
-          setUser(null); // Set user ke null jika respons kosong
+          setUser(null);
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
-        setUser(null); // Handle error dengan fallback user null
+        setUser(null);
       }
     }
 
@@ -89,22 +88,51 @@ export default function Home() {
     window.location.href = "/search/" + searchTerm;
   }
 
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/user/session/logout", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        sessionStorage.clear();
+        window.location.href = "/";
+      } else {
+        console.error("Failed to logout");
+      }
+    } catch (error) {
+      console.error("An error occurred during logout:", error);
+    }
+  };
+
   return (
     <>
       <div className="d-flex mt-3 mx-4 gap-3 flex-row-reverse">
         {user ? (
-          <a href="/post/create" className={`py-2 bd-highlight`}>Tulis Artikel</a>
+          <>
+            <button
+              className="px-4 rounded-pill bd-highlight btn btn-light" 
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          </>
         ) : (
-          <a href="/user/login" className="px-4 rounded-pill bd-highlight border btn btn-light">Login</a>
+          <a href="/user/login" className="px-4 rounded-pill bd-highlight btn btn-light">
+            Login
+          </a>
         )}
-        <a href="https://kamusrejang.glitch.me" className="py-2 bd-highlight">Kamus Bahasa Rejang</a>
+        <a href="https://kamusrejang.glitch.me" className="py-2 bd-highlight">
+          Kamus Bahasa Rejang
+        </a>
       </div>
 
       <div className="container">
         <div className="h-100 d-flex justify-content-center flex-column">
-          <div
-            className="header text-dark text-center rounded-bottom"
-          >
+          <div className="header text-dark text-center rounded-bottom">
             <img id="logo" draggable="false" className="border-0" src="/logo.png" />
           </div>
 
@@ -128,7 +156,9 @@ export default function Home() {
           </div>
 
           <div className="d-flex justify-content-center gap-3">
-            <button className="btn btn-primary px-4 btn-lg" onClick={search}>Cari Apo</button>
+            <button className="btn btn-primary px-4 btn-lg" onClick={search}>
+              Cari Apo
+            </button>
             <a className={`btn btn-secondary px-3 ${!user ? "disabled" : ""} btn-lg`} href="/post/create">
               Tulis Artikel
             </a>
@@ -140,7 +170,6 @@ export default function Home() {
         ) : (
           <div>
             <h4 className="mt-3">Artikel Pilihan</h4>
-
             <div className="row">
               {data.map((entry) => (
                 <div className="col mt-2" key={entry.id}>
@@ -169,10 +198,7 @@ export default function Home() {
                     </h6>
                     <img
                       className="listing-image rounded"
-                      src={
-                        entry.Image ||
-                        "https://e1.pxfuel.com/desktop-wallpaper/908/281/desktop-wallpaper-non-copyrighted-no-copyright.jpg"
-                      }
+                      src={entry.Image || "https://e1.pxfuel.com/desktop-wallpaper/908/281/desktop-wallpaper-non-copyrighted-no-copyright.jpg"}
                       alt={entry.Title}
                     />
                   </a>

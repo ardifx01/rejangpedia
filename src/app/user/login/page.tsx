@@ -9,42 +9,16 @@ export default function LoginForm() {
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const [token, setToken] = useState<string | null>(null); // Token sebagai state
+    const [isLoading, setIsLoading] = useState(true);
 
     const router = useRouter();
 
-    const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault();
-
-        const response = await fetch("/api/user/session/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password }),
-            credentials: 'include',
-        });
-
-        if (response.ok) {
-            const data: any = await response.json();
-            if (data.token) {
-                sessionStorage.setItem("token", data.token);
-                router.push("/");
-            }
-        } else {
-            setErrorMessage(
-                response.status === 401 
-                    ? "Invalid username or password. Please try again." 
-                    : "Server error. Please try again later."
-            );
-        }
-    };
-
-    // Keep track of whether the access token has been verified
-    const [isTokenVerified, setIsTokenVerified] = useState(false);
-
     const refreshAccessToken = async () => {
-        const token = sessionStorage.getItem("token");
-        if (token) {
-            router.push("/"); // Redirect without interrupting the render process
-            return;
+        const storedToken = sessionStorage.getItem("token");
+        if (storedToken) {
+            setToken(storedToken);
+            window.location.href = "/"
         }
 
         const response = await fetch("/api/user/session/token/refresh", {
@@ -54,18 +28,47 @@ export default function LoginForm() {
 
         if (response.ok) {
             const data = await response.json();
-            if (data.token) sessionStorage.setItem("token", data.token);
+            if (data.token) {
+                setToken(data.token); // Set token ke state
+                sessionStorage.setItem("token", data.token);
+            }
         }
-        setIsTokenVerified(true); // Allow rendering after token verification
+        setIsLoading(false);
     };
 
     useEffect(() => {
         refreshAccessToken();
     }, []);
 
-    if (!isTokenVerified) {
-        return null; // Render nothing until the token is verified
+    if (isLoading) {
+        return <p>Loading...</p>;
     }
+
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+
+        const response = await fetch("/api/user/session/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+            credentials: "include",
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.token) {
+                setToken(data.token);
+                sessionStorage.setItem("token", data.token);
+                window.location.href = "/"
+            }
+        } else {
+            setErrorMessage(
+                response.status === 401
+                    ? "Invalid username or password. Please try again."
+                    : "Server error. Please try again later."
+            );
+        }
+    };
 
     return (
         <div className='container'>

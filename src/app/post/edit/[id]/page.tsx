@@ -37,7 +37,7 @@ const EditArticle = () => {
         return sessionStorage.getItem("token");
       }
 
-      const response = await fetch("/api/user/refreshToken", {
+      const response = await fetch("/api/user/session/token/refresh", {
         method: "POST",
         credentials: "include", // Ensure cookies are sent
       });

@@ -11,7 +11,7 @@ const AdminPostList = () => {
         try {
             if (sessionStorage.getItem("token")) return sessionStorage.getItem("token");
 
-            const response = await fetch("/api/user/refreshToken", {
+            const response = await fetch("/api/user/session/token/refresh", {
                 method: "POST",
                 credentials: "include", // Ensure cookies are sent
             });
@@ -19,7 +19,7 @@ const AdminPostList = () => {
             if (!response.ok) return (window.location.href = "/");
 
             const data = await response.json();
-            if (!data.token) return (window.location.href = "/");
+            if (data.token) return (window.location.href = "/");
             sessionStorage.setItem("token", data.token);
             return data.token;
         } catch (error) {

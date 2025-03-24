@@ -123,9 +123,9 @@ class Users {
             const user = await this.#users.findOne({ _id: id });
             if (!user) return { newToken: "", refreshToken: "" };
             const { desc, ...userPayload } = user.toObject();
-
+            
             const newToken: string = jwt.sign(userPayload, process.env.JWT_SECRET_KEY || "", { expiresIn: "1d" }); // Buat access token
-            const refreshToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY || "", {
+            const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY || "", {
                 expiresIn: "7d",
             });
             return { newToken, refreshToken };
@@ -138,14 +138,16 @@ class Users {
     createRefreshToken(refresh: string): any {
         return jwt.verify(refresh, process.env.JWT_SECRET_KEY || "", async (err: any, user: any) => {
             if (err) return "error";
-            const createAccessToken = await this.createAccessToken(user.id);
-            const accessToken: string = createAccessToken.newToken;
+            console.log(user)
+            const createAccessTokenn = await this.createAccessToken(user.id);
+            const accessToken: string = createAccessTokenn.newToken;
 
             return accessToken;
         });
     }
 
     checkAccessToken(token: string) {
+
         let jwtSecretKey: string = process.env.JWT_SECRET_KEY || "";
         try {
             return jwt.verify(token, jwtSecretKey); //Check access token jwtnya sesuai atau kagak (?)
