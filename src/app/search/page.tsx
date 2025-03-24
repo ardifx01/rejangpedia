@@ -2,6 +2,7 @@
 import PostShortcut from "@/components/PostShortcut";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Compass } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
 
 const PostList = () => {
@@ -90,7 +91,7 @@ const PostList = () => {
                 </div>
                 <ul className="list-group pl-2 pr-2">
                     <h1 className="mb-3">
-                        <i className="fa fa-spinner" aria-hidden="true"></i> Discover
+                        Discover <Compass />
                     </h1>
 
                     {data.map((entry: any) => (

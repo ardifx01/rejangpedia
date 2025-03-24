@@ -1,11 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from './page.module.css';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil, faShare } from "@fortawesome/free-solid-svg-icons";
 import LoadingSpinner from "@/components/Loading";
 import { Tooltip, Zoom } from "@mui/material";
-import { Pencil, Share } from "lucide-react";
+import { Heart, Pencil, Send } from "lucide-react";
+import Swal from 'sweetalert2'
 
 interface ArticlePageProps {
   id: any; // Receive `id` as props from the parent
@@ -80,42 +79,65 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ id }) => {
               </>
             )}
           </p>
+          <div style={{ width: "fit-content" }}>
+            <div className="d-flex flex-column flex-md-row gap-3">
+              {data.Image && (
+                <img
+                  className="mr-2 cover"
+                  style={{ height: "250px", objectFit: "contain", background: "rgba(0, 0, 0, 0)", borderRadius: "12px" }}
+                  src={data.Image}
+                  alt={data.Title}
+                />
+              )}
 
-          <div className="d-flex flex-column flex-md-row gap-3">
-            {data.Image && (
-              <img
-                className="mr-2 cover"
-                style={{ height: "250px", objectFit: "contain", background: "rgba(0, 0, 0, 0)", borderRadius: "12px" }}
-                src={data.Image}
-                alt={data.Title}
-              />
-            )}
+              {data.Link && (
+                <article>
+                  <iframe
+                    style={{ width: "460px", maxWidth: "100%", height: "250px", objectFit: "cover", borderRadius: "12px" }}
+                    className="img-fluid"
+                    src={data.Link}
+                    title={data.Title}
+                  ></iframe>
+                </article>
+              )}
+            </div>
 
-            {data.Link && (
-              <article>
-                <iframe
-                  style={{ width: "460px", maxWidth: "100%", height: "250px", objectFit: "cover", borderRadius: "12px" }}
-                  className="img-fluid"
-                  src={data.Link}
-                  title={data.Title}
-                ></iframe>
-              </article>
-            )}
+            {/* Tombol disinkronkan width-nya dengan gambar/link */}
+            <div className="d-flex flex-column mt-2 gap-2">
+              <div className="d-flex justify-content-between align-items-center">
+                <div className="d-flex">
+                  <Tooltip title="Siapa penulisnya?" arrow slots={{ transition: Zoom }}>
+
+                    <button
+                      className="hover-text-danger bg-transparent border-0 p-0 me-2"
+                      onClick={() => {
+                        Swal.fire({
+                          title: "Siapa penulisnya?",
+                          text: "Penulisnya adalah " + data.Pembuat,
+                          icon: "question"
+                        });
+                      }}
+                    >
+                      <Heart />
+                    </button>
+                  </Tooltip>
+
+                  <div>
+                    <button className="hover-text-primary bg-transparent border-0 p-0 w-100" onClick={copyLink}>
+                      <Send />
+                    </button>
+                  </div>
+                </div>
+
+
+                <Tooltip title="You need to login for this" arrow slots={{ transition: Zoom }}>
+                  <a className="hover-text-secondary" href={`/post/edit/${data.id}`}>
+                    <Pencil />
+                  </a>
+                </Tooltip>
+              </div>
+            </div>
           </div>
-
-          <div className="d-flex mt-2 gap-2">
-            <button className="hover-text-primary bg-transparent border-0 p-0" onClick={copyLink}>
-              <Share />
-            </button>
-            <Tooltip title="You need to login for this" arrow slots={{
-              transition: Zoom,
-            }}>
-              <a className="hover-text-secondary " href={`/post/edit/${data.id}`}>
-                <Pencil />
-              </a>
-            </Tooltip>
-          </div>
-
           <div className="text-justify w-100">
             {data.Content &&
               data.Content[0] ? (
