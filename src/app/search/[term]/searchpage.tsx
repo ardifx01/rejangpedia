@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from 'next/navigation';
 import { useInView } from "react-intersection-observer";
 import { marked } from "marked";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRobot } from "@fortawesome/free-solid-svg-icons";
+import { Bot } from "lucide-react";
 
 interface Data {
     _id: string;
@@ -90,7 +89,7 @@ export default function SearchPage() {
     return (
         <div className="container" id="container">
             <div className='px-3 pb-3'>
-                <h3><FontAwesomeIcon icon={faRobot} /> Ai Overview</h3>
+                <h3><Bot /> Ai Overview</h3>
                 <div className="d-block d-md-flex">
                     <div>
                         <p
