@@ -79,28 +79,37 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ id }) => {
               </>
             )}
           </p>
-          <div style={{ width: "fit-content" }}>
-            <div className="d-flex flex-column flex-md-row gap-3">
+          <div style={{ width: !data.Link ? '100%' : 'auto' }}>
+          <div className={`d-flex flex-column flex-md-row gap-1 ${!data.Link && 'w-100'}`}>
               {data.Image && (
                 <img
-                  className="mr-2 cover"
-                  style={{ height: "250px", objectFit: "contain", background: "rgba(0, 0, 0, 0)", borderRadius: "12px" }}
+                  className="mr-2 w-100"
+                  style={{
+                    height: "250px",
+                    objectFit: "cover",
+                    background: "rgba(0, 0, 0, 0)",
+                    borderRadius: "12px",
+                  }}
                   src={data.Image}
                   alt={data.Title}
                 />
               )}
-
               {data.Link && (
-                <article>
+
                   <iframe
-                    style={{ width: "460px", maxWidth: "100%", height: "250px", objectFit: "cover", borderRadius: "12px" }}
+                    style={{
+                      width: "100%", // Pastikan full width
+                      height: "250px",
+                      objectFit: "cover",
+                      borderRadius: "12px",
+                    }}
                     className="img-fluid"
                     src={data.Link}
                     title={data.Title}
                   ></iframe>
-                </article>
               )}
             </div>
+
 
             {/* Tombol disinkronkan width-nya dengan gambar/link */}
             <div className="d-flex flex-column mt-2 gap-2">

@@ -99,7 +99,9 @@ a {
 .hover-text-danger:hover {
   color: var(--error) !important;
 }
-
+.text-danger {
+  color: var(--error) !important;
+}
 .btn {
   transition: all 0.5s !important;
   background-color: var(--accent) !important;
@@ -143,6 +145,9 @@ a {
   }
   .container {
     width: 75% !important;
+  }
+  #container, .container-fluid {
+    width: 55% !important;
   }
 }
 

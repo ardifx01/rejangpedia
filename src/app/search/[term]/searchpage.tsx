@@ -88,7 +88,7 @@ export default function SearchPage() {
     };
 
     return (
-        <div className="container">
+        <div className="container" id="container">
             <div className='px-3 pb-3'>
                 <h3><FontAwesomeIcon icon={faRobot} /> Ai Overview</h3>
                 <div className="d-block d-md-flex">

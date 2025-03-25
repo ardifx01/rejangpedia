@@ -6,4 +6,7 @@
     flex-direction: column; /* Elemen dalam kolom */
     width: 70%;
   }  
+  #artikel {
+    width: 70% !important;
+  }
 }

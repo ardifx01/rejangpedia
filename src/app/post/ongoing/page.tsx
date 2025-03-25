@@ -130,7 +130,7 @@ const AdminPostList = () => {
     }, [page]);
 
     return (
-        <div className="container">
+        <div className="container" id="container">
             <ul className="list-group pl-2 pr-2">
                 <h3 className="mt-3">
                     <i className="fa fa-spinner" aria-hidden="true"></i> Data OnGoing
