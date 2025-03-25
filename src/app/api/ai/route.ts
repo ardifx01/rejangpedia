@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
     const { searchParams } = new URL(req.url);
     let prompt = searchParams.get("prompt") || "default";
     const apiurl = `https://sandipbaruwal.onrender.com/gemini?prompt=${encodeURIComponent(
-  "Jelaskan secara super lengkap dan menggunakan rich text dan highlight 1 kalimat pengertian utamanya dengan warna bg pastel . Langsung aja gak usah pake penjelasan 'baiklah bla bla bla' tentang " + prompt
+  "Jelaskan secara super lengkap dan menggunakan rich text dan highlight 1 kalimat pengertian utamanya dengan warna bg #245292 dan text white . Langsung aja gak usah pake penjelasan 'baiklah bla bla bla' tentang " + prompt
       )}`;
         
     try {

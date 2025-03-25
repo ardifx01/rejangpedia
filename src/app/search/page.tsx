@@ -59,7 +59,7 @@ const PostList = () => {
                     Kamus Bahasa Rejang
                 </a>
                 <a href="/" className="py-2 bd-highlight text-decoration-underline">
-                    Homepage
+                    Halaman Utama
                 </a>
             </div>
             <div className="container">
@@ -91,7 +91,7 @@ const PostList = () => {
                 </div>
                 <ul className="list-group pl-2 pr-2">
                     <h1 className="mb-3">
-                        Discover <Compass />
+                        Jelajahi <Compass />
                     </h1>
 
                     {data.map((entry: any) => (

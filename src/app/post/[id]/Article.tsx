@@ -56,9 +56,7 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ id }) => {
     <div className={`container d-flex justify-content-center`}>
       <div className={styles.container}>
         <div className="w-100 d-flex flex-column">
-          <h3 className="my-0 text-primar" style={{ fontWeight: "bolder" }}>
-            {data.Edit && data.Edit !== "tidak ada waktu" ? `${data.Edit}` : "07 Maret 2023"}
-          </h3>
+
           <h1 id="title">{data.Title}</h1>
 
           <p
@@ -71,54 +69,62 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ id }) => {
             }}
           >
             <span className="text-primar">Ditulis oleh</span> {data.Pembuat}{" "}
-            {data.Waktu ? ` pada ${data.Waktu}` : " pada 07-Maret-2023"}
+            {data.Waktu ? ` pada ${data.Waktu}` : " pada 07 Maret 2023"}
             {data.Diedit && (
               <>
                 <br />
-                <span className="text-sec">Diedit oleh</span> {data.Diedit}
+                <span className="text-sec">Diedit oleh</span> {data.Diedit} {"pada "} {data.Edit && data.Edit !== "tidak ada waktu" ? `${data.Edit}` : "07 Maret 2023"}
               </>
             )}
           </p>
           <div style={{ width: !data.Link ? '100%' : 'auto' }}>
-          <div className={`d-flex flex-column flex-md-row gap-1 ${!data.Link && 'w-100'}`}>
-              {data.Image && (
-                <img
-                  className="mr-2 w-100"
-                  style={{
-                    height: "250px",
-                    objectFit: "cover",
-                    background: "rgba(0, 0, 0, 0)",
-                    borderRadius: "12px",
-                  }}
-                  src={data.Image}
-                  alt={data.Title}
-                />
-              )}
-              {data.Link && (
+            <div className={`d-flex flex-column flex-md-row gap-1 ${!data.Link && 'w-100'}`}>
+              <div id="carouselExampleControls" className="carousel slide w-100" data-bs-interval="false" data-bs-cycle="false">
+                <div className="carousel-inner">
+                  {data.Image && (
+                    <div className="carousel-item active">
+                      <img
+                        src={data.Image}
+                        className="d-block w-100"
+                        alt={data.Title}
+                        style={{ height: "350px", objectFit: "cover", borderRadius: "12px" }}
+                      />
+                    </div>
+                  )}
 
-                  <iframe
-                    style={{
-                      width: "100%", // Pastikan full width
-                      height: "250px",
-                      objectFit: "cover",
-                      borderRadius: "12px",
-                    }}
-                    className="img-fluid"
-                    src={data.Link}
-                    title={data.Title}
-                  ></iframe>
-              )}
+                  {data.Link && (
+                    <div className="carousel-item">
+                      <iframe
+                        className="d-block w-100"
+                        src={data.Link}
+                        title={data.Title}
+                        style={{ width: "100%", height: "350px", borderRadius: "12px", objectFit: "cover" }}
+                      ></iframe>
+                    </div>
+                  )}
+                </div>
+                {(data.Link && data.Image) && (
+                  <>
+                    <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                      <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span className="visually-hidden">Previous</span>
+                    </button>
+                    <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                      <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span className="visually-hidden">Next</span>
+                    </button>
+                  </>)}
+              </div>
             </div>
 
 
             {/* Tombol disinkronkan width-nya dengan gambar/link */}
             <div className="d-flex flex-column mt-2 gap-2">
               <div className="d-flex justify-content-between align-items-center">
-                <div className="d-flex">
+                <div className="d-flex gap-2">
                   <Tooltip title="Siapa penulisnya?" arrow slots={{ transition: Zoom }}>
-
                     <button
-                      className="hover-text-danger bg-transparent border-0 p-0 me-2"
+                      className="hover-text-danger bg-transparent border-0 p-0"
                       onClick={() => {
                         Swal.fire({
                           title: "Siapa penulisnya?",
@@ -139,7 +145,7 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ id }) => {
                 </div>
 
 
-                <Tooltip title="You need to login for this" arrow slots={{ transition: Zoom }}>
+                <Tooltip title="Kamu perlu masuk terlebih dahulu" arrow slots={{ transition: Zoom }}>
                   <a className="hover-text-secondary" href={`/post/edit/${data.id}`}>
                     <Pencil />
                   </a>
@@ -147,11 +153,11 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ id }) => {
               </div>
             </div>
           </div>
-          <div className="text-justify w-100">
+          <div className="text-justify w-100 mt-0">
             {data.Content &&
               data.Content[0] ? (
               data.Content.map((bab: any, index: any) => (
-                <div className="mb-4 mt-3" key={index}>
+                <div className="mb-4 mt-2" key={index}>
                   <h3>{bab.babTitle}</h3>
                   <p id={bab.babTitle} className="text-justify" dangerouslySetInnerHTML={{ __html: bab.babContent }}></p>
                 </div>

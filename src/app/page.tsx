@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import Tooltip from '@mui/material/Tooltip';
 import { Zoom } from "@mui/material";
-import { LogIn, LogOut } from "lucide-react";
+import { LogIn, LogOut, Search } from "lucide-react";
 
 export default function Home() {
   const [data, setData] = useState<Data[] | []>([]);
@@ -140,7 +140,7 @@ export default function Home() {
           </div>
 
           <div className="mt-4 mb-4 d-flex justify-content-center position-relative">
-            <FontAwesomeIcon icon={faSearch} className="position-absolute search-icon" />
+            <Search className="position-absolute search-icon" />
             <input
               autoComplete="off"
               type="text"
@@ -163,7 +163,7 @@ export default function Home() {
               Cari Apo
             </button>
 
-            <Tooltip title={`${!user ? "you need to login" : "add article"}`} arrow slots={{
+            <Tooltip title={`${!user ? "Kamu perlu masuk" : "Tulis Artikel"}`} arrow slots={{
               transition: Zoom,
             }}>
               <a
@@ -178,7 +178,7 @@ export default function Home() {
             <p>Baca juga: <a href="https://mfathinhalim.github.io" className="text-sec">Tentang Fathin</a></p>
             
             <a className="text-sec"
-              href={user ? "/post/create" : "/user/login"}>
+              href="/rules">
                 Peraturan Artikel
             </a>
           </div>

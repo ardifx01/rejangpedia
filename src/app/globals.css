@@ -74,6 +74,18 @@ a {
 .text-primar {
   color: var(--primary-text) !important;
 }
+.swal2-popup {
+  background-color: var(--accent) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--accent) !important;
+  border-radius: 3%;
+}
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: var(--background);
+  border-radius: 50%;
+}
+
 .form-control {
   background-color: var(--accent) !important;
   color: var(--text) !important;
@@ -102,6 +114,7 @@ a {
 .text-danger {
   color: var(--error) !important;
 }
+
 .btn {
   transition: all 0.5s !important;
   background-color: var(--accent) !important;
@@ -114,7 +127,7 @@ a {
 .btn:hover {
   opacity: 80%;
 }
-.btn-primary {
+.btn-primary, .swal2-confirm {
   background-color: var(--primary) !important;
   color: #121212 !important;
   border: 1px solid var(--primary-border) !important; 
@@ -344,4 +357,7 @@ a {
     font-size: 30px !important;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
   }
+}
+#title {
+  text-align: left !important;
 }

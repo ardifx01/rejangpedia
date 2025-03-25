@@ -129,13 +129,13 @@ export default function LoginForm() {
                         </div>
                         <div className='text-end'>
                             <button type='submit' className='btn btn-lg btn-primary w-100 rounded'>
-                                Log In
+                                Masuk
                             </button>
                         </div>
                         <h5 className='mt-3'>
-                            Don't have an account?{" "}
+                            Belum punya akun?{" "}
                             <a href='/user/signup' className='bold text-info text-decoration-underline'>
-                                Sign Up
+                                Daftar
                             </a>
                         </h5>
 
