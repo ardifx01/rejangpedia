@@ -166,8 +166,7 @@ const ArticlePage = () => {
           </div>
 
           <div style={{ borderRadius: "24px" }}>
-            {data.Content &&
-              data.Content[0] ? (
+          {Array.isArray(data.Content) && data.Content.length > 0 ? (
               data.Content.map((bab: any, index: any) => (
                 <div className="my-4" key={index}>
                   <h3>{bab.babTitle}</h3>

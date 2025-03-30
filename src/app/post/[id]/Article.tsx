@@ -154,8 +154,7 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ id }) => {
             </div>
           </div>
           <div className="text-justify w-100 mt-0">
-            {data.Content &&
-              data.Content[0] ? (
+          {Array.isArray(data.Content) && data.Content.length > 0 ? (
               data.Content.map((bab: any, index: any) => (
                 <div className="mb-4 mt-2" key={index}>
                   <h3>{bab.babTitle}</h3>
