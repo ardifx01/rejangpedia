@@ -183,69 +183,59 @@ export default class rejangpedia {
     }
 
     async edit(data: any) {
-        // Cari dokumen di koleksi "mainModel" berdasarkan id
         const acceptedData = await this.data.findOne({ id: data.id });
         if (!acceptedData) {
-            return null; // Handle case where the data doesn't exist
+            return null;
         }
     
-        // Dapatkan tanggal sekarang dan format menjadi string "tanggal-bulan-tahun"
         const tanggalSekarang = new Date();
         const namaBulan = [
-            "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli",
-            "Agustus", "September", "Oktober", "November", "Desember"
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
         ];
         const tanggal = tanggalSekarang.getDate();
         const bulan = namaBulan[tanggalSekarang.getMonth()];
         const tahun = tanggalSekarang.getFullYear();
         const formatWaktu = `${tanggal}-${bulan}-${tahun}`;
-        
-        // Siapkan data yang akan diperbarui
+    
         const updatedData = {
             id: data.id,
             Title: data.Title,
             Pembuat: acceptedData.Pembuat,
-            Image: data.Image ? `${process.env.urlEndpoint}RejangPedia/image-${data.id}.jpg` : acceptedData.Image, // Gunakan image baru jika ada
+            Image: data.Image ? `${process.env.urlEndpoint}RejangPedia/image-${data.id}.jpg` : acceptedData.Image,
             Diedit: data.Diedit,
             Link: data.Link.replace("/watch?v=", "/embed/"),
             Waktu: acceptedData.Waktu || "Tidak Diketahui",
             Edit: formatWaktu,
-            Content: data.Content, // Menyimpan array content
+            Content: data.Content,
         };
     
-        // Menggunakan `updateOne` untuk memperbarui atau membuat dokumen baru jika tidak ada
         await this.ongoingData.updateOne(
-            { id: data.id }, // Find by ID
-            { $set: updatedData }, // Update fields
-            { upsert: true } // Create a new document if it doesn't exist
+            { id: data.id },
+            { $set: updatedData },
+            { upsert: true }
         );
     
-        return updatedData; // Mengembalikan data yang telah diperbarui
+        // Kirim notifikasi ke Discord
+        await this.sendDiscordNotification("Artikel Diedit", data.Title, data.id);
+    
+        return updatedData;
     }
+    
     
     async create(body: Data) {
         const uniqueFileName = uuidv4();
         const tanggalSekarang = new Date();
-
-        const namaBulan = [ //Buat nama bulannya biar... keren hehehehee
-            "Januari",
-            "Februari",
-            "Maret",
-            "April",
-            "Mei",
-            "Juni",
-            "Juli",
-            "Agustus",
-            "September",
-            "Oktober",
-            "November",
-            "Desember",
+    
+        const namaBulan = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
         ];
         const tanggal = tanggalSekarang.getDate();
         const bulan = namaBulan[tanggalSekarang.getMonth()];
         const tahun = tanggalSekarang.getFullYear();
         const currentEpochTime = Date.now();
-        // Upload the data to MongoDB using the 'goingModel'
+    
         await this.ongoingData.create({
             id: uniqueFileName,
             Title: body.Title,
@@ -256,7 +246,10 @@ export default class rejangpedia {
             Waktu: `${tanggal}-${bulan}-${tahun}`,
             Content: body.Content,
         });
-
+    
+        // Kirim notifikasi ke Discord
+        await this.sendDiscordNotification("Artikel Baru Ditambahkan", body.Title, uniqueFileName);
+    
         return {
             id: uniqueFileName,
             Title: body.Title,
@@ -268,6 +261,7 @@ export default class rejangpedia {
             Content: body.Content,
         }
     }
+    
     async accept(id: string | string[]) {
         const acceptedData = await this.ongoingData.findOne({ id: id });
         if (!acceptedData) {
@@ -300,4 +294,37 @@ export default class rejangpedia {
             console.error("Error accepting data:", error);
         }
     }
+    async sendDiscordNotification(action: string, title: string, id: string) {
+        const webhookUrl = process.env.DISCORD_WEBHOOK_URL; // Simpan di .env
+        const roleId = "1355742371039678555"; // Ganti dengan ID role yang ingin di-mention
+        const rejangpediaUrl = `https://rejangpedia.vercel.app/post/ongoing/${id}`; // Ganti dengan URL asli
+        const waktuSekarang = new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" });
+    
+        if (!webhookUrl) {
+            console.error("Webhook URL tidak ditemukan.");
+            return;
+        }
+    
+        const embedData = {
+            content: `<@&${roleId}> 📌 **${action}**`, // Mention role
+            embeds: [
+                {
+                    title: `📖 ${title}`,
+                    url: rejangpediaUrl, // Link ke halaman artikel
+                    description: `🔹 **Aksi:** ${action}\n🔹 **Tanggal:** ${waktuSekarang}`,
+                    color: 0x2ECC71, // Warna hijau terang 🌿
+                    footer: {
+                        text: "Rejangpedia",
+                    },
+                },
+            ],
+        };
+    
+        try {
+            await axios.post(webhookUrl, embedData);
+        } catch (err) {
+            console.error("Gagal mengirim notifikasi ke Discord:", err);
+        }
+    }
+    
 }

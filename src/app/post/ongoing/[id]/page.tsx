@@ -24,7 +24,66 @@ const ArticlePage = () => {
   if (loading) {
     return <p>Loading...</p>;
   }
+  const refreshAccessToken = async () => {
+    try {
+      if (sessionStorage.getItem("token")) return sessionStorage.getItem("token");
 
+      const response = await fetch("/api/user/session/token/refresh", {
+        method: "POST",
+        credentials: "include", // Ensure cookies are sent
+      });
+
+      if (!response.ok) return (window.location.href = "/");
+
+      const data = await response.json();
+      if (data.token) return (window.location.href = "/");
+      sessionStorage.setItem("token", data.token);
+      return data.token;
+    } catch (error) {
+      console.error("Error refreshing access token:", error);
+      return null;
+    }
+  };
+
+  const handleAccept = async (id: string) => {
+    const tokenTemp = await refreshAccessToken();
+    if (!tokenTemp) return console.error("No token available");
+
+    try {
+      const response = await fetch(`/api/post/accept/${id}`, {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${tokenTemp}` },
+      });
+
+      if (response.ok) {
+        console.log(`Post ${id} accepted.`);
+        setData((prevData: any) => prevData.filter((post: any) => post.id !== id)); // Remove accepted post
+      } else {
+        console.error(`Failed to accept post ${id}`);
+      }
+    } catch (error) {
+      console.error("Error accepting post:", error);
+    }
+  };
+  const handleDelete = async (id: string) => {
+    const tokenTemp = await refreshAccessToken();
+    if (!tokenTemp) return console.error("No token available");
+
+    try {
+      const response = await fetch(`/api/post/delete/ongoing/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${tokenTemp}` },
+      });
+
+      if (response.ok) {
+        setData((prevData: any) => prevData.filter((post: any) => post.id !== id)); // Remove accepted post
+      } else {
+        console.error(`Failed to accept post ${id}`);
+      }
+    } catch (error) {
+      console.error("Error accepting post:", error);
+    }
+  };
   return (
     <div className="container">
       <div className="col-lg-10 col-md-9">
@@ -86,25 +145,37 @@ const ArticlePage = () => {
           </div>
 
           <div className="d-flex mt-3">
-            <button className="btn btn-info rounded-pill mr-1 text-white" onClick={() => alert("Share functionality here!")}> 
+            <button className="btn btn-info rounded-pill mr-1 text-white" onClick={() => alert("Share functionality here!")}>
               <i className="fa fa-share text-white" aria-hidden="true"></i> Bagikan
             </button>
             <a className="btn btn-secondary rounded-pill" href={`/edit/${data.id}`}>
               <i className="fa fa-pencil" aria-hidden="true"></i> Edit Artikel
             </a>
+            <button
+              className="btn btn-secondary rounded-pill"
+              onClick={() => handleAccept(data.id)}
+            >
+              <i className="fa fa-check" aria-hidden="true"></i> Terima
+            </button>
+            <button
+              className="btn btn-danger rounded-pill"
+              onClick={() => handleDelete(data.id)}
+            >
+              <i className="fa fa-trash" aria-hidden="true"></i> Delete
+            </button>
           </div>
 
           <div style={{ borderRadius: "24px" }}>
-          {data.Content &&
-              data.Content[0] ?(
+            {data.Content &&
+              data.Content[0] ? (
               data.Content.map((bab: any, index: any) => (
                 <div className="my-4" key={index}>
                   <h3>{bab.babTitle}</h3>
                   <p id={bab.babTitle} className="text-justify" dangerouslySetInnerHTML={{ __html: bab.babContent }}></p>
                 </div>
               ))) : (
-                <p id={data.Title} className="text-justify" dangerouslySetInnerHTML={{ __html: data.Content }}></p>
-              )}
+              <p id={data.Title} className="text-justify" dangerouslySetInnerHTML={{ __html: data.Content }}></p>
+            )}
           </div>
         </div>
       </div>
