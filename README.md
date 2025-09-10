@@ -24,7 +24,7 @@
 
 ```bash
 # 1. Clone repo ini
-git clone https://github.com/MFathinHalim/rejangpedia.git
+git clone https://github.com/ardifx01/rejangpedia.git
 cd rejangpedia
 
 # 2. Install dependencies
